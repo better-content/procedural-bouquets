@@ -7,3 +7,5 @@
 
 # Forge generated
 src/generated/
+
+/logs/
