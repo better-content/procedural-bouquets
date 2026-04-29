@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "SCS",
+    "PPP"
+  ],
+  "key": {
+    "S": { "tag": "minecraft:wooden_slabs" },
+    "C": { "item": "minecraft:chest" },
+    "P": { "item": "minecraft:stick" }
+  },
+  "result": {
+    "item": "procedural_bouquets:bouquet_grid"
+  }
+}

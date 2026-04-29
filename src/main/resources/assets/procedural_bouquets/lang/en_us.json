@@ -1,0 +1,9 @@
+{
+  "item.procedural_bouquets.bouquet": "Bouquet",
+  "item.procedural_bouquets.bouquet_grid": "Bouquet Grid",
+  "block.procedural_bouquets.bouquet_grid": "Bouquet Grid",
+  "block.procedural_bouquets.potted_bouquet": "Potted Bouquet",
+  "item.procedural_bouquets.potted_bouquet": "Potted Bouquet",
+  "tooltip.procedural_bouquets.flower_count": "Flowers: %s",
+  "tooltip.procedural_bouquets.more": "+%s more"
+}
