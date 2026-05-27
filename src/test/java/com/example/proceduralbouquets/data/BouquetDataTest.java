@@ -86,6 +86,25 @@ class BouquetDataTest {
     }
 
     @Test
+    void fromTagSkipsMalformedResourceIdsBeforeRegistryLookup() {
+        CompoundTag root = new CompoundTag();
+        ListTag entries = new ListTag();
+        entries.add(entryTag("not a valid id", 4, 5, 0.9F));
+        root.put(BouquetData.TAG_ENTRIES, entries);
+
+        assertTrue(BouquetData.fromTag(root).isEmpty());
+    }
+
+    @Test
+    void toTagPreservesYOffsetForRendererVariation() {
+        CompoundTag tag = BouquetData.toTag(List.of(
+            new BouquetEntry(id("minecraft:poppy"), 2, 3, 0, 1.0F, -2)
+        ));
+
+        assertEquals(-2, tag.getList(BouquetData.TAG_ENTRIES, Tag.TAG_COMPOUND).getCompound(0).getInt("y"));
+    }
+
+    @Test
     void stableHashChangesWhenEntriesChange() {
         List<BouquetEntry> first = List.of(
             new BouquetEntry(id("minecraft:poppy"), 2, 2, 1, 0.95F, 0)
@@ -99,5 +118,16 @@ class BouquetDataTest {
 
     private static ResourceLocation id(String value) {
         return ResourceLocation.parse(value);
+    }
+
+    private static CompoundTag entryTag(String itemId, int x, int z, float scale) {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("id", itemId);
+        tag.putInt("x", x);
+        tag.putInt("z", z);
+        tag.putInt("rot", 1);
+        tag.putFloat("scale", scale);
+        tag.putInt("y", 0);
+        return tag;
     }
 }
