@@ -14,7 +14,7 @@ Pack-owned procedural flower bouquet generator for Forge `1.20.1`.
 
 Deploy the reobfuscated runtime jar from:
 
-- `build/libs/procedural_bouquets-<version>.jar`
+- `build/libs/procedural-bouquets-<version>.jar`
 
 ## Community and support
 
