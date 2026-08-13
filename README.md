@@ -19,3 +19,7 @@ Deploy the reobfuscated runtime jar from:
 ## Community and support
 
 For modpack and mod discussion, playtest feedback, and bug reports, join the [Better Content Discord](https://discord.gg/EkRnZbzqS9).
+
+## Identity
+
+The canonical identity is repository/artifact `procedural-bouquets`, mod ID and resource namespace `procedural_bouquets`, and Maven group `com.bettercontent`.
