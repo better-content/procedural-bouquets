@@ -6,6 +6,7 @@ import com.bettercontent.proceduralbouquets.blockentity.PottedBouquetBlockEntity
 import com.bettercontent.proceduralbouquets.data.BouquetData;
 import com.bettercontent.proceduralbouquets.data.BouquetEntry;
 import com.bettercontent.proceduralbouquets.item.PottedBouquetItem;
+import com.bettercontent.proceduralbouquets.menu.BouquetGridMenu;
 import com.bettercontent.proceduralbouquets.registry.ModBlocks;
 import com.bettercontent.proceduralbouquets.registry.ModItems;
 import com.bettercontent.proceduralbouquets.recipe.PottedBouquetRecipe;
@@ -18,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -158,6 +160,68 @@ public final class ProceduralBouquetsGameTests {
         ItemStack bouquetDrop = drops.stream().filter(stack -> stack.is(ModItems.BOUQUET.get())).findFirst()
             .orElseThrow(() -> new IllegalStateException("Filled pot did not return its bouquet"));
         helper.assertTrue(BouquetData.read(bouquetDrop).equals(entries), "broken pot should preserve the bouquet arrangement");
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = "minecraft", template = "empty", batch = "procedural_bouquets_editor", timeoutTicks = 40)
+    public static void gridInventoryMapsEveryCellAndEnforcesFlowerCapacity(GameTestHelper helper) {
+        BlockPos pos = new BlockPos(1, 1, 1);
+        helper.setBlock(pos, ModBlocks.BOUQUET_GRID.get());
+        BouquetGridBlockEntity grid = gridAt(helper, pos);
+
+        int southeast = BouquetGridMenu.slotIndex(15, 15);
+        grid.setItem(southeast, new ItemStack(Items.POPPY));
+        helper.assertTrue(grid.getAt(15, 15).isPresent(), "slot 255 should map to the southeast grid cell");
+        helper.assertTrue(grid.getItem(southeast).is(Items.POPPY), "mapped inventory slot should expose its flower");
+
+        grid.setItem(BouquetGridMenu.slotIndex(0, 0), new ItemStack(Items.STONE));
+        helper.assertTrue(grid.getAt(0, 0).isEmpty(), "non-flower items must be rejected");
+
+        for (int slot = 0; slot < 63; slot++) {
+            grid.setItem(slot, new ItemStack(Items.DANDELION));
+        }
+        helper.assertTrue(grid.getEntriesView().size() == BouquetData.MAX_ENTRIES, "editor should accept exactly 64 flowers");
+        grid.setItem(63, new ItemStack(Items.CORNFLOWER));
+        helper.assertTrue(grid.getAt(15, 3).isEmpty(), "the 65th occupied cell must be rejected");
+
+        grid.setItem(southeast, new ItemStack(Items.CORNFLOWER));
+        helper.assertTrue(grid.getItem(southeast).is(Items.CORNFLOWER), "a full grid should still allow replacing an occupied cell");
+        ItemStack removed = grid.removeItem(southeast, 1);
+        helper.assertTrue(removed.is(Items.CORNFLOWER) && grid.getAt(15, 15).isEmpty(), "inventory removal should return exactly its flower");
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = "minecraft", template = "empty", batch = "procedural_bouquets_editor", timeoutTicks = 40)
+    public static void gridMenuSupportsStandardShiftClickAndCursorMovement(GameTestHelper helper) {
+        BlockPos pos = new BlockPos(1, 1, 1);
+        helper.setBlock(pos, ModBlocks.BOUQUET_GRID.get());
+        BouquetGridBlockEntity grid = gridAt(helper, pos);
+        FakePlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
+        BlockPos absolute = helper.absolutePos(pos);
+        player.setPos(absolute.getX() + 0.5D, absolute.getY() + 0.5D, absolute.getZ() + 0.5D);
+        player.getInventory().clearContent();
+        player.getInventory().setItem(0, new ItemStack(Items.POPPY, 3));
+
+        BouquetGridMenu menu = new BouquetGridMenu(1, player.getInventory(), grid);
+        int playerHotbarSlot = menu.findSlot(player.getInventory(), 0)
+            .orElseThrow(() -> new IllegalStateException("Player hotbar slot was not added to bouquet menu"));
+        ItemStack moved = menu.quickMoveStack(player, playerHotbarSlot);
+        helper.assertTrue(moved.getCount() == 3, "shift-click should report the original moved stack");
+        helper.assertTrue(grid.getEntriesView().size() == 3, "shift-click should distribute a flower stack into one-item cells");
+        helper.assertTrue(player.getInventory().getItem(0).isEmpty(), "shift-click should consume only the inserted player stack");
+
+        int source = BouquetGridMenu.slotIndex(0, 0);
+        int destination = BouquetGridMenu.slotIndex(5, 7);
+        menu.clicked(source, 0, ClickType.PICKUP, player);
+        menu.clicked(destination, 0, ClickType.PICKUP, player);
+        helper.assertTrue(grid.getAt(0, 0).isEmpty(), "cursor pickup should clear the source cell");
+        helper.assertTrue(grid.getAt(5, 7).isPresent(), "cursor placement should populate the exact destination cell");
+        helper.assertTrue(menu.getCarried().isEmpty(), "completed cursor movement should leave no carried flower");
+
+        helper.assertTrue(menu.stillValid(player), "menu should remain valid beside its grid");
+        helper.setBlock(pos, Blocks.AIR);
+        helper.assertTrue(!menu.stillValid(player), "menu should become invalid when its grid is removed");
+        menu.removed(player);
         helper.succeed();
     }
 

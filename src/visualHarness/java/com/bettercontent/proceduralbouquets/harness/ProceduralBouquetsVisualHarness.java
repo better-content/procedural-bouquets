@@ -2,9 +2,11 @@ package com.bettercontent.proceduralbouquets.harness;
 
 import com.bettercontent.proceduralbouquets.ProceduralBouquets;
 import com.bettercontent.proceduralbouquets.client.BouquetRenderUtil;
+import com.bettercontent.proceduralbouquets.client.BouquetGridScreen;
 import com.bettercontent.proceduralbouquets.data.BouquetData;
 import com.bettercontent.proceduralbouquets.data.BouquetEntry;
 import com.bettercontent.proceduralbouquets.item.PottedBouquetItem;
+import com.bettercontent.proceduralbouquets.menu.BouquetGridMenu;
 import com.bettercontent.proceduralbouquets.registry.ModBlocks;
 import com.bettercontent.proceduralbouquets.registry.ModItems;
 import com.google.gson.GsonBuilder;
@@ -27,6 +29,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,7 +43,8 @@ public final class ProceduralBouquetsVisualHarness {
         "01-grid.png",
         "02-bouquet-item.png",
         "03-potted-item.png",
-        "04-potted-block.png"
+        "04-potted-block.png",
+        "05-grid-editor.png"
     };
     private static final List<BouquetEntry> EMPTY = List.of();
     private static final List<BouquetEntry> SINGLE = entries(1);
@@ -168,9 +174,28 @@ public final class ProceduralBouquetsVisualHarness {
         private static final int BACKGROUND = 0xFF20252B;
         private static final int PANEL = 0xFF303841;
         private static final int LABEL = 0xFFF2E9D8;
+        private BouquetGridScreen editorScreen;
 
         private HarnessScreen() {
             super(Component.literal("Procedural Bouquets Visual Harness"));
+        }
+
+        @Override
+        protected void init() {
+            Inventory inventory = new Inventory(null);
+            inventory.setItem(0, new ItemStack(Items.POPPY, 16));
+            inventory.setItem(1, new ItemStack(Items.CORNFLOWER, 8));
+            inventory.setItem(9, new ItemStack(Items.DANDELION, 12));
+            SimpleContainer grid = new SimpleContainer(BouquetGridMenu.GRID_SLOT_COUNT);
+            for (BouquetEntry entry : DENSE) {
+                grid.setItem(BouquetGridMenu.slotIndex(entry.x(), entry.z()), BouquetRenderUtil.stackForEntry(entry));
+            }
+            editorScreen = new BouquetGridScreen(
+                new BouquetGridMenu(77, inventory, grid),
+                inventory,
+                Component.translatable("screen.procedural_bouquets.bouquet_grid")
+            );
+            editorScreen.init(minecraft, width, height);
         }
 
         @Override
@@ -182,6 +207,7 @@ public final class ProceduralBouquetsVisualHarness {
                 case 1 -> renderItemPage(graphics, false);
                 case 2 -> renderItemPage(graphics, true);
                 case 3 -> renderBlockPage(graphics, false);
+                case 4 -> editorScreen.render(graphics, -100, -100, partialTick);
                 default -> {
                 }
             }

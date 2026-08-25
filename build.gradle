@@ -170,7 +170,7 @@ tasks.register('prepareVisualHarnessOptions', Copy) {
     into 'run-visual-harness'
     doFirst {
         delete fileTree('run-visual-harness/screenshots') {
-            include '01-grid.png', '02-bouquet-item.png', '03-potted-item.png', '04-potted-block.png'
+            include '01-grid.png', '02-bouquet-item.png', '03-potted-item.png', '04-potted-block.png', '05-grid-editor.png'
         }
         delete 'run-visual-harness/visual-harness-complete.json'
     }
@@ -192,7 +192,8 @@ tasks.register('verifyVisualHarness') {
             'screenshots/01-grid.png',
             'screenshots/02-bouquet-item.png',
             'screenshots/03-potted-item.png',
-            'screenshots/04-potted-block.png'
+            'screenshots/04-potted-block.png',
+            'screenshots/05-grid-editor.png'
         ]
         def digests = [] as Set
         captures.each { relative ->

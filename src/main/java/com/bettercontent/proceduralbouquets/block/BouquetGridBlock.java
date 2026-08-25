@@ -17,6 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -31,6 +32,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraftforge.network.NetworkHooks;
 
 public class BouquetGridBlock extends BaseEntityBlock {
     public static final double TRAY_HEIGHT = 2.0D / 16.0D;
@@ -65,33 +67,44 @@ public class BouquetGridBlock extends BaseEntityBlock {
         if (!(level.getBlockEntity(pos) instanceof BouquetGridBlockEntity be)) {
             return InteractionResult.PASS;
         }
-        if (hit.getDirection() != Direction.UP) {
-            return InteractionResult.PASS;
-        }
-
-        int x = gridCoord(hit.getLocation().x - pos.getX());
-        int z = gridCoord(hit.getLocation().z - pos.getZ());
 
         ItemStack held = player.getItemInHand(hand);
         boolean emptyHand = held.isEmpty();
 
         if (player.isShiftKeyDown() && emptyHand) {
-            return removeFlower(level, pos, player, be, x, z);
+            if (player instanceof ServerPlayer serverPlayer) {
+                NetworkHooks.openScreen(serverPlayer, be, pos);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+
+        if (hit.getDirection() != Direction.UP) {
+            return InteractionResult.PASS;
         }
 
         if (!isValidFlower(held)) {
             return InteractionResult.PASS;
         }
 
+        int x = gridCoord(hit.getLocation().x - pos.getX());
+        int z = gridCoord(hit.getLocation().z - pos.getZ());
+
         if (be.getAt(x, z).isPresent()) {
             if (!(player.isShiftKeyDown() && ModCommonConfig.ALLOW_REPLACEMENT_WHEN_SNEAKING.get())) {
                 return InteractionResult.CONSUME;
+            }
+            if (level.isClientSide) {
+                return InteractionResult.SUCCESS;
             }
             be.removeAt(x, z).ifPresent(old -> {
                 if (!player.isCreative()) {
                     popResource(level, pos, new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(old.itemId())));
                 }
             });
+        }
+
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
         }
 
         ResourceLocation id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(held.getItem());
@@ -111,22 +124,6 @@ public class BouquetGridBlock extends BaseEntityBlock {
 
         be.markUpdated();
         level.playSound(null, pos, SoundEvents.GRASS_PLACE, SoundSource.BLOCKS, 0.7F, 0.9F + level.random.nextFloat() * 0.2F);
-        return InteractionResult.sidedSuccess(level.isClientSide);
-    }
-
-    private static InteractionResult removeFlower(Level level, BlockPos pos, Player player, BouquetGridBlockEntity be, int x, int z) {
-        var removed = be.removeAt(x, z);
-        if (removed.isEmpty()) {
-            return InteractionResult.PASS;
-        }
-
-        if (!player.isCreative()) {
-            ItemStack out = new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(removed.get().itemId()));
-            popResource(level, pos, out);
-        }
-
-        be.markUpdated();
-        level.playSound(null, pos, SoundEvents.GRASS_BREAK, SoundSource.BLOCKS, 0.7F, 0.9F + level.random.nextFloat() * 0.2F);
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
