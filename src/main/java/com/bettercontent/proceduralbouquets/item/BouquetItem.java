@@ -9,18 +9,15 @@ import com.bettercontent.proceduralbouquets.registry.ModBlocks;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -39,34 +36,31 @@ public class BouquetItem extends Item {
             return InteractionResult.PASS;
         }
 
-        BlockPos clicked = context.getClickedPos();
-        Direction face = context.getClickedFace();
-        BlockPlaceContext placeContext = new BlockPlaceContext(context);
-
-        BlockPos placePos = clicked;
-        BlockState clickedState = level.getBlockState(clicked);
-        if (!clickedState.canBeReplaced(placeContext)) {
-            placePos = clicked.relative(face);
+        if (!level.getBlockState(context.getClickedPos()).is(Blocks.FLOWER_POT)) {
+            return InteractionResult.PASS;
         }
 
-        if (!level.getBlockState(placePos).canBeReplaced(placeContext)) {
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+
+        if (!level.setBlock(context.getClickedPos(), ModBlocks.POTTED_BOUQUET.get().defaultBlockState(), 3)) {
             return InteractionResult.FAIL;
         }
 
-        if (!level.setBlock(placePos, ModBlocks.POTTED_BOUQUET.get().defaultBlockState(), 3)) {
-            return InteractionResult.FAIL;
-        }
-
-        if (level.getBlockEntity(placePos) instanceof PottedBouquetBlockEntity be) {
+        if (level.getBlockEntity(context.getClickedPos()) instanceof PottedBouquetBlockEntity be) {
             be.setEntries(entries);
             be.markUpdated();
+        } else {
+            level.setBlock(context.getClickedPos(), Blocks.FLOWER_POT.defaultBlockState(), 3);
+            return InteractionResult.FAIL;
         }
 
-        if (!context.getPlayer().isCreative() || ModCommonConfig.CONSUME_FLOWERS_IN_CREATIVE.get()) {
+        if (context.getPlayer() == null || !context.getPlayer().isCreative() || ModCommonConfig.CONSUME_FLOWERS_IN_CREATIVE.get()) {
             stack.shrink(1);
         }
 
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return InteractionResult.CONSUME;
     }
 
     @Override

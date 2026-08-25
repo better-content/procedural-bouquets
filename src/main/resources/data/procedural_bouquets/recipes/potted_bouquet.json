@@ -1,10 +1,4 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    { "item": "procedural_bouquets:bouquet" },
-    { "item": "minecraft:flower_pot" }
-  ],
-  "result": {
-    "item": "procedural_bouquets:potted_bouquet"
-  }
+  "type": "procedural_bouquets:potted_bouquet",
+  "category": "decorations"
 }

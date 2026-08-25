@@ -1,0 +1,48 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "minecraft:block/white_wool",
+    "paper": "minecraft:block/white_wool",
+    "band": "minecraft:block/brown_wool"
+  },
+  "elements": [
+    {
+      "from": [4, 1, 7.25],
+      "to": [8.25, 10, 8.75],
+      "rotation": { "origin": [8, 4, 8], "axis": "z", "angle": 22.5 },
+      "faces": {
+        "north": { "texture": "#paper" },
+        "south": { "texture": "#paper" },
+        "west": { "texture": "#paper" },
+        "east": { "texture": "#paper" },
+        "up": { "texture": "#paper" },
+        "down": { "texture": "#paper" }
+      }
+    },
+    {
+      "from": [7.75, 1, 7.25],
+      "to": [12, 10, 8.75],
+      "rotation": { "origin": [8, 4, 8], "axis": "z", "angle": -22.5 },
+      "faces": {
+        "north": { "texture": "#paper" },
+        "south": { "texture": "#paper" },
+        "west": { "texture": "#paper" },
+        "east": { "texture": "#paper" },
+        "up": { "texture": "#paper" },
+        "down": { "texture": "#paper" }
+      }
+    },
+    {
+      "from": [6.25, 3.25, 6.75],
+      "to": [9.75, 4.5, 9.25],
+      "faces": {
+        "north": { "texture": "#band" },
+        "south": { "texture": "#band" },
+        "west": { "texture": "#band" },
+        "east": { "texture": "#band" },
+        "up": { "texture": "#band" },
+        "down": { "texture": "#band" }
+      }
+    }
+  ]
+}

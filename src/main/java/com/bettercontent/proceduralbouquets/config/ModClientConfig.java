@@ -1,5 +1,6 @@
 package com.bettercontent.proceduralbouquets.config;
 
+import com.bettercontent.proceduralbouquets.data.BouquetData;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -11,13 +12,9 @@ public final class ModClientConfig {
         .comment("Render a hovered bouquet grid cell outline")
         .define("renderHoverIndicator", true);
 
-    public static final ForgeConfigSpec.ConfigValue<String> RENDER_MODE = BUILDER
-        .comment("Renderer mode")
-        .define("renderMode", "ITEM_SPRITES");
-
     public static final ForgeConfigSpec.IntValue MAX_RENDERED_FLOWERS = BUILDER
         .comment("Client cap for rendered flowers")
-        .defineInRange("maxRenderedFlowers", 64, 1, 256);
+        .defineInRange("maxRenderedFlowers", BouquetData.MAX_ENTRIES, 1, BouquetData.MAX_ENTRIES);
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 

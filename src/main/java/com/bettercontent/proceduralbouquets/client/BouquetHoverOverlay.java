@@ -59,7 +59,7 @@ public final class BouquetHoverOverlay {
         double minZ = pos.getZ() + (z / 16.0D);
         double maxX = minX + (1.0D / 16.0D);
         double maxZ = minZ + (1.0D / 16.0D);
-        double y = pos.getY() + 1.001D;
+        double y = pos.getY() + BouquetGridBlock.TRAY_HEIGHT + 0.001D;
 
         Vec3 cam = event.getCamera().getPosition();
         VertexConsumer consumer = event.getMultiBufferSource().getBuffer(RenderType.lines());

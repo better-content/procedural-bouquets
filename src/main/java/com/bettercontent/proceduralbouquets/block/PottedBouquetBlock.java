@@ -2,6 +2,7 @@ package com.bettercontent.proceduralbouquets.block;
 
 import com.bettercontent.proceduralbouquets.blockentity.PottedBouquetBlockEntity;
 import com.bettercontent.proceduralbouquets.data.BouquetData;
+import com.bettercontent.proceduralbouquets.config.ModCommonConfig;
 import com.bettercontent.proceduralbouquets.registry.ModItems;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,9 @@ public class PottedBouquetBlock extends BaseEntityBlock {
         ItemStack held = player.getItemInHand(hand);
 
         if (player.isShiftKeyDown() && held.isEmpty() && !be.isEmpty()) {
+            if (level.isClientSide) {
+                return InteractionResult.SUCCESS;
+            }
             ItemStack bouquet = be.createBouquetStack();
             be.setEntries(List.of());
             be.markUpdated();
@@ -81,10 +85,14 @@ public class PottedBouquetBlock extends BaseEntityBlock {
             return InteractionResult.CONSUME;
         }
 
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+
         be.setEntries(entries);
         be.markUpdated();
 
-        if (!player.isCreative()) {
+        if (!player.isCreative() || ModCommonConfig.CONSUME_FLOWERS_IN_CREATIVE.get()) {
             held.shrink(1);
         }
 

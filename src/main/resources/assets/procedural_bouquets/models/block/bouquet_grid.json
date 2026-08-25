@@ -1,6 +1,64 @@
 {
-  "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/oak_planks"
-  }
+    "particle": "minecraft:block/oak_planks",
+    "tray": "minecraft:block/oak_planks"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [16, 1, 16],
+      "faces": {
+        "down": { "texture": "#tray", "cullface": "down" },
+        "up": { "texture": "#tray" },
+        "north": { "texture": "#tray" },
+        "south": { "texture": "#tray" },
+        "west": { "texture": "#tray" },
+        "east": { "texture": "#tray" }
+      }
+    },
+    {
+      "from": [0, 1, 0],
+      "to": [16, 2, 1],
+      "faces": {
+        "up": { "texture": "#tray" },
+        "north": { "texture": "#tray" },
+        "south": { "texture": "#tray" },
+        "west": { "texture": "#tray" },
+        "east": { "texture": "#tray" }
+      }
+    },
+    {
+      "from": [0, 1, 15],
+      "to": [16, 2, 16],
+      "faces": {
+        "up": { "texture": "#tray" },
+        "north": { "texture": "#tray" },
+        "south": { "texture": "#tray" },
+        "west": { "texture": "#tray" },
+        "east": { "texture": "#tray" }
+      }
+    },
+    {
+      "from": [0, 1, 1],
+      "to": [1, 2, 15],
+      "faces": {
+        "up": { "texture": "#tray" },
+        "north": { "texture": "#tray" },
+        "south": { "texture": "#tray" },
+        "west": { "texture": "#tray" },
+        "east": { "texture": "#tray" }
+      }
+    },
+    {
+      "from": [15, 1, 1],
+      "to": [16, 2, 15],
+      "faces": {
+        "up": { "texture": "#tray" },
+        "north": { "texture": "#tray" },
+        "south": { "texture": "#tray" },
+        "west": { "texture": "#tray" },
+        "east": { "texture": "#tray" }
+      }
+    }
+  ]
 }

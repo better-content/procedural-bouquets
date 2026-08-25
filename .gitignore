@@ -6,6 +6,7 @@ run-client/
 run-server/
 run-data/
 run-gametest/
+run-visual-harness/
 logs/
 out/
 bin/

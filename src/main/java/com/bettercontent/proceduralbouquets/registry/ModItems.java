@@ -2,6 +2,7 @@ package com.bettercontent.proceduralbouquets.registry;
 
 import com.bettercontent.proceduralbouquets.ProceduralBouquets;
 import com.bettercontent.proceduralbouquets.item.BouquetItem;
+import com.bettercontent.proceduralbouquets.item.PottedBouquetItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
@@ -20,7 +21,7 @@ public final class ModItems {
     );
 
     public static final RegistryObject<Item> POTTED_BOUQUET_ITEM = ITEMS.register("potted_bouquet", () ->
-        new BlockItem(ModBlocks.POTTED_BOUQUET.get(), new Item.Properties())
+        new PottedBouquetItem(ModBlocks.POTTED_BOUQUET.get(), new Item.Properties().stacksTo(1))
     );
 
     private ModItems() {

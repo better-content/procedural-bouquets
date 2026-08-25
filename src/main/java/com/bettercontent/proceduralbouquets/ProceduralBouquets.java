@@ -6,6 +6,7 @@ import com.bettercontent.proceduralbouquets.registry.ModBlockEntities;
 import com.bettercontent.proceduralbouquets.registry.ModBlocks;
 import com.bettercontent.proceduralbouquets.registry.ModCreativeTabs;
 import com.bettercontent.proceduralbouquets.registry.ModItems;
+import com.bettercontent.proceduralbouquets.registry.ModRecipeSerializers;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -22,6 +23,7 @@ public final class ProceduralBouquets {
         ModBlocks.BLOCKS.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModBlockEntities.BLOCK_ENTITY_TYPES.register(modBus);
+        ModRecipeSerializers.register(modBus);
         modBus.addListener(ModCreativeTabs::onBuildCreativeTabContents);
 
         ModCommonConfig.register();

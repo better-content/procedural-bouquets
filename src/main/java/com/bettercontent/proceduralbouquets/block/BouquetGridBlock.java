@@ -33,6 +33,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 public class BouquetGridBlock extends BaseEntityBlock {
+    public static final double TRAY_HEIGHT = 2.0D / 16.0D;
     private static final VoxelShape SHAPE = box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
 
     public BouquetGridBlock(Properties properties) {

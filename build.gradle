@@ -15,6 +15,18 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+sourceSets {
+    visualHarness {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    visualHarnessImplementation.extendsFrom implementation
+    visualHarnessRuntimeOnly.extendsFrom runtimeOnly
+}
+
 minecraft {
     mappings channel: 'official', version: minecraft_version
     copyIdeResources = true
@@ -34,6 +46,22 @@ minecraft {
         }
 
         client {}
+
+        visualHarness {
+            parent minecraft.runs.client
+            client true
+            workingDirectory project.file('run-visual-harness')
+            property 'forge.logging.console.level', 'info'
+            property 'procedural_bouquets.visualHarness', 'true'
+            args '--width', '1600', '--height', '900'
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                    source sourceSets.visualHarness
+                }
+            }
+        }
 
         server {
             arg '--nogui'
@@ -133,6 +161,74 @@ tasks.register('verifyFull') {
     description = 'Runs the full verification lane including headless Forge game tests.'
     dependsOn tasks.named('verifyFast')
     dependsOn tasks.named('headlessGameTest')
+}
+
+tasks.register('prepareVisualHarnessOptions', Copy) {
+    group = 'verification'
+    description = 'Installs deterministic client settings and clears prior bouquet visual evidence.'
+    from 'src/visualHarness/options.txt'
+    into 'run-visual-harness'
+    doFirst {
+        delete fileTree('run-visual-harness/screenshots') {
+            include '01-grid.png', '02-bouquet-item.png', '03-potted-item.png', '04-potted-block.png'
+        }
+        delete 'run-visual-harness/visual-harness-complete.json'
+    }
+}
+
+tasks.configureEach {
+    if (name == 'runVisualHarness') {
+        dependsOn tasks.named('prepareVisualHarnessOptions')
+    }
+}
+
+tasks.register('verifyVisualHarness') {
+    group = 'verification'
+    description = 'Runs the isolated bouquet renderer and verifies that every visual evidence file was captured.'
+    dependsOn tasks.named('runVisualHarness')
+    doLast {
+        def root = file('run-visual-harness')
+        def captures = [
+            'screenshots/01-grid.png',
+            'screenshots/02-bouquet-item.png',
+            'screenshots/03-potted-item.png',
+            'screenshots/04-potted-block.png'
+        ]
+        def digests = [] as Set
+        captures.each { relative ->
+            def evidence = new File(root, relative)
+            if (!evidence.isFile() || evidence.length() == 0L) {
+                throw new GradleException("Visual harness did not produce ${relative}")
+            }
+            def image = javax.imageio.ImageIO.read(evidence)
+            if (image == null || image.width != 1600 || image.height != 900) {
+                throw new GradleException("Visual harness produced an invalid 1600x900 PNG for ${relative}")
+            }
+            def sampledColors = [] as Set
+            for (int y = 0; y < image.height; y += 20) {
+                for (int x = 0; x < image.width; x += 20) {
+                    sampledColors.add(image.getRGB(x, y))
+                }
+            }
+            if (sampledColors.size() < 12) {
+                throw new GradleException("Visual harness produced a blank or near-blank sheet for ${relative}")
+            }
+            def digest = java.security.MessageDigest.getInstance('SHA-256').digest(evidence.bytes).encodeHex().toString()
+            if (!digests.add(digest)) {
+                throw new GradleException("Visual harness produced a duplicate evidence sheet for ${relative}")
+            }
+        }
+        def completion = new File(root, 'visual-harness-complete.json')
+        if (!completion.isFile()) {
+            throw new GradleException('Visual harness did not produce completion metadata')
+        }
+        def metadata = new groovy.json.JsonSlurper().parse(completion)
+        if (metadata.status != 'complete' || metadata.resolution != [1600, 900]
+            || metadata.fixtures != ['empty:0', 'single:1', 'mixed:12', 'dense:64']
+            || metadata.captures != captures.collect { it.substring('screenshots/'.length()) }) {
+            throw new GradleException('Visual harness completion metadata is not successful')
+        }
+    }
 }
 
 jacoco {

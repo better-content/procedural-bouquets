@@ -13,6 +13,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
 public final class BouquetRenderUtil {
+    public static final float GRID_FLOWER_HEIGHT = 0.135F;
+
     private BouquetRenderUtil() {
     }
 
@@ -40,11 +42,11 @@ public final class BouquetRenderUtil {
             float zCenter = (entry.z() + 0.5F) / 16.0F;
 
             poseStack.pushPose();
-            poseStack.translate(xCenter, 0.08F + (entry.yOffset() * 0.01F), zCenter);
+            poseStack.translate(xCenter, GRID_FLOWER_HEIGHT + (entry.yOffset() * 0.006F), zCenter);
             poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotation() * 90.0F));
             poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 
-            float scale = 0.35F * entry.scale();
+            float scale = 0.30F * entry.scale();
             poseStack.scale(scale, scale, scale);
 
             itemRenderer.renderStatic(
@@ -61,7 +63,7 @@ public final class BouquetRenderUtil {
         }
     }
 
-    public static void renderCompactBouquet(
+    public static void renderGatheredBouquet(
         List<BouquetEntry> entries,
         PoseStack poseStack,
         MultiBufferSource buffer,
@@ -83,14 +85,13 @@ public final class BouquetRenderUtil {
 
             float nx = (entry.x() - 7.5F) / 7.5F;
             float nz = (entry.z() - 7.5F) / 7.5F;
-            float spread = 0.16F;
 
             poseStack.pushPose();
-            poseStack.translate(nx * spread, 0.1F + (i % 5) * 0.012F + (entry.yOffset() * 0.01F), nz * spread);
-            poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotation() * 90.0F));
-            poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+            poseStack.translate(nx * 0.18F, 0.24F + (nz * 0.08F) + (entry.yOffset() * 0.006F), nz * 0.07F);
+            poseStack.mulPose(Axis.YP.rotationDegrees((entry.rotation() * 45.0F) + (i % 2 == 0 ? 12.0F : -12.0F)));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(-nx * 24.0F));
 
-            float scale = 0.26F * entry.scale();
+            float scale = 0.44F * entry.scale();
             poseStack.scale(scale, scale, scale);
 
             itemRenderer.renderStatic(
@@ -102,6 +103,51 @@ public final class BouquetRenderUtil {
                 buffer,
                 level,
                 (int) (seedBase + (i * 17L))
+            );
+            poseStack.popPose();
+        }
+    }
+
+    public static void renderPottedBouquet(
+        List<BouquetEntry> entries,
+        PoseStack poseStack,
+        MultiBufferSource buffer,
+        int packedLight,
+        int packedOverlay,
+        Level level,
+        long seedBase,
+        int maxRendered
+    ) {
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+        int max = Math.min(entries.size(), maxRendered);
+
+        for (int i = 0; i < max; i++) {
+            BouquetEntry entry = entries.get(i);
+            ItemStack stack = stackForEntry(entry);
+            if (stack.isEmpty()) {
+                continue;
+            }
+
+            float nx = (entry.x() - 7.5F) / 7.5F;
+            float nz = (entry.z() - 7.5F) / 7.5F;
+
+            poseStack.pushPose();
+            poseStack.translate(nx * 0.12F, 0.43F + (nz * 0.05F) + (entry.yOffset() * 0.005F), nz * 0.11F);
+            poseStack.mulPose(Axis.YP.rotationDegrees((entry.rotation() * 45.0F) + (i * 137.5F)));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(-nx * 14.0F));
+
+            float scale = 0.40F * entry.scale();
+            poseStack.scale(scale, scale, scale);
+
+            itemRenderer.renderStatic(
+                stack,
+                ItemDisplayContext.FIXED,
+                packedLight,
+                packedOverlay,
+                poseStack,
+                buffer,
+                level,
+                (int) (seedBase + (i * 23L))
             );
             poseStack.popPose();
         }

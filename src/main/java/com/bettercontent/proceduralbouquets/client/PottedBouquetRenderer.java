@@ -18,8 +18,8 @@ public class PottedBouquetRenderer implements BlockEntityRenderer<PottedBouquetB
         }
 
         poseStack.pushPose();
-        poseStack.translate(0.5F, 0.35F, 0.5F);
-        BouquetRenderUtil.renderCompactBouquet(
+        poseStack.translate(0.5F, 0.0F, 0.5F);
+        BouquetRenderUtil.renderPottedBouquet(
             be.getEntriesView(),
             poseStack,
             buffer,
