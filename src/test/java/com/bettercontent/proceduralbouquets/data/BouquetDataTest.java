@@ -27,6 +27,14 @@ class BouquetDataTest {
     }
 
     @Test
+    void bouquetEntryMapsStoredRotationToQuarterTurns() {
+        for (int rotation = 0; rotation < 4; rotation++) {
+            BouquetEntry entry = new BouquetEntry(id("minecraft:poppy"), 0, 0, rotation, 1.0F, 0);
+            assertEquals(rotation * 90.0F, entry.rotationDegrees());
+        }
+    }
+
+    @Test
     void toTagAppliesClampRules() {
         List<BouquetEntry> entries = List.of(
             new BouquetEntry(id("minecraft:poppy"), -2, 40, 19, 5.0F, 0)

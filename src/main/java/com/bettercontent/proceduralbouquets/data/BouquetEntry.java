@@ -20,4 +20,8 @@ public record BouquetEntry(
         rotation = rotation & 3;
         scale = Mth.clamp(scale, 0.65F, 1.15F);
     }
+
+    public float rotationDegrees() {
+        return rotation * 90.0F;
+    }
 }

@@ -48,7 +48,7 @@ public final class BouquetRenderUtil {
                 GRID_FLOWER_HEIGHT + (scale * 0.5F) + (entry.yOffset() * 0.006F),
                 zCenter
             );
-            poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotation() * 90.0F));
+            poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotationDegrees()));
             poseStack.scale(scale, scale, scale);
 
             itemRenderer.renderStatic(
@@ -90,8 +90,7 @@ public final class BouquetRenderUtil {
 
             poseStack.pushPose();
             poseStack.translate(nx * 0.18F, 0.24F + (nz * 0.08F) + (entry.yOffset() * 0.006F), nz * 0.07F);
-            poseStack.mulPose(Axis.YP.rotationDegrees((entry.rotation() * 45.0F) + (i % 2 == 0 ? 12.0F : -12.0F)));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(-nx * 24.0F));
+            poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotationDegrees()));
 
             float scale = 0.44F * entry.scale();
             poseStack.scale(scale, scale, scale);
@@ -135,8 +134,7 @@ public final class BouquetRenderUtil {
 
             poseStack.pushPose();
             poseStack.translate(nx * 0.12F, 0.43F + (nz * 0.05F) + (entry.yOffset() * 0.005F), nz * 0.11F);
-            poseStack.mulPose(Axis.YP.rotationDegrees((entry.rotation() * 45.0F) + (i * 137.5F)));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(-nx * 14.0F));
+            poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotationDegrees()));
 
             float scale = 0.40F * entry.scale();
             poseStack.scale(scale, scale, scale);

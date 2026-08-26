@@ -13,3 +13,4 @@
 - Extend the visual harness with the production grid editor and add slot-mapping, capacity, transfer, and adaptive-layout tests.
 - Add four production-rendered showcase sheets for hand-composed bouquet palettes and silhouettes.
 - Stand every tray flower upright as a three-dimensional block-item model so the editor matches the collected bouquet's silhouette.
+- Preserve each flower's exact quarter-turn orientation across tray, gathered, and potted renders without form-specific rotation offsets.
