@@ -14,7 +14,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @Mod.EventBusSubscriber(modid = ProceduralBouquets.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class ClientSetup {
-    public static final ResourceLocation BOUQUET_WRAP_MODEL =
+    public static final ResourceLocation BOUQUET_TIE_MODEL =
         ResourceLocation.fromNamespaceAndPath(ProceduralBouquets.MOD_ID, "special/bouquet_wrap");
 
     private ClientSetup() {
@@ -43,6 +43,6 @@ public final class ClientSetup {
 
     @SubscribeEvent
     public static void onRegisterAdditionalModels(ModelEvent.RegisterAdditional event) {
-        event.register(BOUQUET_WRAP_MODEL);
+        event.register(BOUQUET_TIE_MODEL);
     }
 }

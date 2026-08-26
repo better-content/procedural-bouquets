@@ -169,8 +169,8 @@ public final class BouquetRenderUtil {
         return densityScale(count, 0.58F, 0.38F);
     }
 
-    static float gatheredWrapperScale(int count) {
-        return densityScale(count, 0.54F, 0.72F);
+    static float gatheredTieScale(int count) {
+        return densityScale(count, 0.48F, 0.68F);
     }
 
     public static ItemStack stackForEntry(BouquetEntry entry) {

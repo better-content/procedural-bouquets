@@ -46,13 +46,13 @@ class BouquetRenderUtilTest {
     }
 
     @Test
-    void gatheredWrapperGrowsWithTheFlowerCount() {
-        float sparse = BouquetRenderUtil.gatheredWrapperScale(1);
-        float mixed = BouquetRenderUtil.gatheredWrapperScale(12);
-        float dense = BouquetRenderUtil.gatheredWrapperScale(64);
+    void gatheredTieGrowsWithTheFlowerCountWithoutBecomingAWrapper() {
+        float sparse = BouquetRenderUtil.gatheredTieScale(1);
+        float mixed = BouquetRenderUtil.gatheredTieScale(12);
+        float dense = BouquetRenderUtil.gatheredTieScale(64);
 
-        assertEquals(0.54F, sparse);
-        assertEquals(0.72F, dense);
+        assertEquals(0.48F, sparse);
+        assertEquals(0.68F, dense);
         org.junit.jupiter.api.Assertions.assertTrue(sparse < mixed);
         org.junit.jupiter.api.Assertions.assertTrue(mixed < dense);
     }

@@ -4,7 +4,7 @@ Pack-owned procedural flower bouquet generator for Forge `1.20.1`.
 
 ## Gameplay
 
-- Arrange up to 64 upright, three-dimensional flowers on the two-pixel-high bouquet grid, then collect the finished bouquet; every flower keeps its exact rotation across tray, gathered, and potted forms. Gathered bouquets use a centered kraft-paper sleeve, while potted flowers spread through the pot's full three-dimensional opening.
+- Arrange up to 64 upright, three-dimensional flowers on the two-pixel-high bouquet grid, then collect the finished bouquet; every flower keeps its exact rotation across tray, gathered, and potted forms. Gathered bouquets leave their stems exposed under a small cream ribbon tie, while potted flowers spread through the pot's full three-dimensional opening.
 - Sneak-use an empty hand on the grid to open its literal 16×16 inventory map; ordinary inventory clicks rearrange or remove flowers, while hovering one flower and pressing `R` or `Shift+R` rotates it clockwise or counterclockwise. Each flower icon turns in its slot to show the stored orientation before closing the screen to inspect the tray.
 - Pot a populated bouquet by using it on an existing empty flower pot or by crafting it with a flower pot. Both routes preserve the complete arrangement.
 - Sneak-use an empty hand on a filled potted bouquet to recover the bouquet while leaving the pot in place.

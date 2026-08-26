@@ -40,7 +40,7 @@ public class BouquetItemRenderer extends BlockEntityWithoutLevelRenderer {
         poseStack.pushPose();
         poseStack.translate(0.5F, 0.08F, 0.5F);
 
-        renderWrap(entries.size(), poseStack, buffer, packedLight, packedOverlay);
+        renderTie(entries.size(), poseStack, buffer, packedLight, packedOverlay);
 
         if (!entries.isEmpty()) {
             BouquetRenderUtil.renderGatheredBouquet(entries, poseStack, buffer, packedLight, packedOverlay, null, hash, ModClientConfig.MAX_RENDERED_FLOWERS.get());
@@ -49,14 +49,14 @@ public class BouquetItemRenderer extends BlockEntityWithoutLevelRenderer {
         poseStack.popPose();
     }
 
-    private static void renderWrap(int flowerCount, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    private static void renderTie(int flowerCount, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         Minecraft minecraft = Minecraft.getInstance();
-        BakedModel model = minecraft.getModelManager().getModel(ClientSetup.BOUQUET_WRAP_MODEL);
+        BakedModel model = minecraft.getModelManager().getModel(ClientSetup.BOUQUET_TIE_MODEL);
         RenderType renderType = RenderType.cutout();
-        float scale = BouquetRenderUtil.gatheredWrapperScale(flowerCount);
+        float scale = BouquetRenderUtil.gatheredTieScale(flowerCount);
 
         poseStack.pushPose();
-        poseStack.translate(-(scale * 0.5F), -(scale * (5.0F / 12.0F)), -(scale * 0.5F));
+        poseStack.translate(-(scale * 0.5F), -(scale * 0.25F), -(scale * 0.5F));
         poseStack.scale(scale, scale, scale);
         minecraft.getBlockRenderer().getModelRenderer().renderModel(
             poseStack.last(),
