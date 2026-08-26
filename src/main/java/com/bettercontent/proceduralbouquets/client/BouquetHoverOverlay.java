@@ -2,15 +2,21 @@ package com.bettercontent.proceduralbouquets.client;
 
 import com.bettercontent.proceduralbouquets.ProceduralBouquets;
 import com.bettercontent.proceduralbouquets.block.BouquetGridBlock;
+import com.bettercontent.proceduralbouquets.block.BouquetPlacement;
+import com.bettercontent.proceduralbouquets.blockentity.BouquetGridBlockEntity;
+import com.bettercontent.proceduralbouquets.config.ModCommonConfig;
 import com.bettercontent.proceduralbouquets.config.ModClientConfig;
+import com.bettercontent.proceduralbouquets.data.BouquetEntry;
 import com.bettercontent.proceduralbouquets.registry.ModBlocks;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -41,19 +47,43 @@ public final class BouquetHoverOverlay {
         }
 
         BlockPos pos = hit.getBlockPos();
-        if (!mc.level.getBlockState(pos).is(ModBlocks.BOUQUET_GRID.get())) {
+        if (mc.level == null
+            || !mc.level.getBlockState(pos).is(ModBlocks.BOUQUET_GRID.get())
+            || !(mc.level.getBlockEntity(pos) instanceof BouquetGridBlockEntity bouquetGrid)) {
             return;
         }
 
-        boolean placement = BouquetGridBlock.isValidFlower(player.getMainHandItem()) || BouquetGridBlock.isValidFlower(player.getOffhandItem());
-        boolean removal = player.isShiftKeyDown() && player.getMainHandItem().isEmpty();
-        if (!placement && !removal) {
+        ItemStack heldFlower = heldFlower(player);
+        if (heldFlower.isEmpty()) {
             return;
         }
 
         Vec3 local = hit.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
-        int x = Mth.clamp((int) Math.floor(local.x * 16.0D), 0, 15);
-        int z = Mth.clamp((int) Math.floor(local.z * 16.0D), 0, 15);
+        int x = BouquetPlacement.gridCoordinate(local.x);
+        int z = BouquetPlacement.gridCoordinate(local.z);
+        BouquetPlacement.State placementState = BouquetPlacement.state(
+            bouquetGrid.getAt(x, z).isPresent(),
+            bouquetGrid.isFull(),
+            player.isShiftKeyDown(),
+            ModCommonConfig.ALLOW_REPLACEMENT_WHEN_SNEAKING.get()
+        );
+        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(heldFlower.getItem());
+        BouquetEntry ghost = BouquetPlacement.entry(pos, player.getUUID(), itemId, x, z);
+
+        Vec3 cam = event.getCamera().getPosition();
+        event.getPoseStack().pushPose();
+        event.getPoseStack().translate(pos.getX() - cam.x, pos.getY() - cam.y, pos.getZ() - cam.z);
+        BouquetPlacementGhostRenderer.render(
+            ghost,
+            placementState,
+            event.getPoseStack(),
+            event.getMultiBufferSource(),
+            LevelRenderer.getLightColor(mc.level, pos.above()),
+            0,
+            mc.level,
+            (int) pos.asLong()
+        );
+        event.getPoseStack().popPose();
 
         double minX = pos.getX() + (x / 16.0D);
         double minZ = pos.getZ() + (z / 16.0D);
@@ -61,11 +91,10 @@ public final class BouquetHoverOverlay {
         double maxZ = minZ + (1.0D / 16.0D);
         double y = pos.getY() + BouquetGridBlock.TRAY_HEIGHT + 0.001D;
 
-        Vec3 cam = event.getCamera().getPosition();
         VertexConsumer consumer = event.getMultiBufferSource().getBuffer(RenderType.lines());
-        float r = placement ? 0.2F : 1.0F;
-        float g = placement ? 1.0F : 0.2F;
-        float b = 0.2F;
+        float r = BouquetPlacementGhostRenderer.red(placementState);
+        float g = BouquetPlacementGhostRenderer.green(placementState);
+        float b = BouquetPlacementGhostRenderer.blue(placementState);
 
         LevelRenderer.renderLineBox(
             event.getPoseStack(),
@@ -81,5 +110,15 @@ public final class BouquetHoverOverlay {
             b,
             1.0F
         );
+    }
+
+    private static ItemStack heldFlower(Player player) {
+        if (BouquetGridBlock.isValidFlower(player.getMainHandItem())) {
+            return player.getMainHandItem();
+        }
+        if (BouquetGridBlock.isValidFlower(player.getOffhandItem())) {
+            return player.getOffhandItem();
+        }
+        return ItemStack.EMPTY;
     }
 }

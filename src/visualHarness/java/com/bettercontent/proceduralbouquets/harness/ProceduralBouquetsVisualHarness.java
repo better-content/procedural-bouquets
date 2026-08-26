@@ -1,8 +1,10 @@
 package com.bettercontent.proceduralbouquets.harness;
 
 import com.bettercontent.proceduralbouquets.ProceduralBouquets;
+import com.bettercontent.proceduralbouquets.block.BouquetPlacement;
 import com.bettercontent.proceduralbouquets.client.BouquetRenderUtil;
 import com.bettercontent.proceduralbouquets.client.BouquetGridScreen;
+import com.bettercontent.proceduralbouquets.client.BouquetPlacementGhostRenderer;
 import com.bettercontent.proceduralbouquets.blockentity.BouquetGridBlockEntity;
 import com.bettercontent.proceduralbouquets.data.BouquetData;
 import com.bettercontent.proceduralbouquets.data.BouquetEntry;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
@@ -49,7 +52,8 @@ public final class ProceduralBouquetsVisualHarness {
         "06-sunset-ember.png",
         "07-moonlit-meadow.png",
         "08-blush-garden.png",
-        "09-wildflower-crown.png"
+        "09-wildflower-crown.png",
+        "10-placement-assist.png"
     };
     private static final List<BouquetEntry> EMPTY = List.of();
     private static final List<BouquetEntry> SINGLE = entries(1);
@@ -57,6 +61,26 @@ public final class ProceduralBouquetsVisualHarness {
     private static final List<BouquetEntry> DENSE = entries(64);
     private static final List<List<BouquetEntry>> FIXTURES = List.of(EMPTY, SINGLE, MIXED, DENSE);
     private static final String[] FIXTURE_NAMES = {"Empty", "Single", "Mixed 12", "Dense 64"};
+    private static final List<BouquetEntry> PLACEMENT_CONTEXT = arrangement(
+        flower("dandelion", 3, 4, 0, 0.92F, -1),
+        flower("allium", 12, 4, 1, 1.04F, 1),
+        flower("cornflower", 4, 12, 2, 0.96F, 0),
+        flower("white_tulip", 12, 12, 3, 1.00F, 1)
+    );
+    private static final BouquetEntry PLACEMENT_GHOST = BouquetPlacement.entry(
+        BlockPos.ZERO,
+        UUID.fromString("817723b2-2f88-4bf5-9355-d27f6078df4b"),
+        ResourceLocation.withDefaultNamespace("white_tulip"),
+        8,
+        8
+    );
+    private static final List<BouquetEntry> OCCUPIED_PLACEMENT_CONTEXT = arrangement(
+        flower("dandelion", 3, 4, 0, 0.92F, -1),
+        flower("allium", 12, 4, 1, 1.04F, 1),
+        flower("blue_orchid", 8, 8, 2, 0.98F, 0),
+        flower("cornflower", 4, 12, 2, 0.96F, 0),
+        flower("white_tulip", 12, 12, 3, 1.00F, 1)
+    );
     private static final List<Showcase> SHOWCASES = List.of(
         new Showcase("Sunset Ember", arrangement(
             flower("orange_tulip", 8, 13, 0, 1.08F, 2),
@@ -297,9 +321,58 @@ public final class ProceduralBouquetsVisualHarness {
                 case 3 -> renderBlockPage(graphics, false);
                 case 4 -> editorScreen.render(graphics, -100, -100, partialTick);
                 case 5, 6, 7, 8 -> renderShowcasePage(graphics, SHOWCASES.get(page - 5));
+                case 9 -> renderPlacementAssistPage(graphics);
                 default -> {
                 }
             }
+        }
+
+        private void renderPlacementAssistPage(GuiGraphics graphics) {
+            String[] labels = {
+                "Valid empty cell · mint",
+                "Occupied · blocked red",
+                "Sneak replacement · amber",
+                "No held flower · no assist"
+            };
+            BouquetPlacement.State[] states = {
+                BouquetPlacement.State.VALID,
+                BouquetPlacement.State.BLOCKED_OCCUPIED,
+                BouquetPlacement.State.REPLACEMENT,
+                null
+            };
+            int columns = 2;
+            int rows = 2;
+            int gap = 10;
+            int panelWidth = (width - (gap * (columns + 1))) / columns;
+            int firstTop = 48;
+            int panelHeight = (height - firstTop - 34 - gap) / rows;
+            for (int index = 0; index < labels.length; index++) {
+                int column = index % columns;
+                int row = index / columns;
+                int left = gap + (column * (panelWidth + gap));
+                int top = firstTop + (row * (panelHeight + gap));
+                graphics.fill(left, top, left + panelWidth, top + panelHeight, PANEL);
+                graphics.drawCenteredString(font, labels[index], left + panelWidth / 2, top + 12, LABEL);
+                List<BouquetEntry> entries = index == 1 || index == 2
+                    ? OCCUPIED_PLACEMENT_CONTEXT
+                    : PLACEMENT_CONTEXT;
+                renderPlacementScene(
+                    graphics,
+                    left + panelWidth / 2,
+                    top + panelHeight / 2 + 22,
+                    panelHeight * 0.56F,
+                    entries,
+                    states[index]
+                );
+            }
+            graphics.drawCenteredString(
+                font,
+                "Exact final size, cell, quarter-turn rotation and scale · translucent 3D production model",
+                width / 2,
+                30,
+                LABEL
+            );
+            graphics.drawString(font, "Close the inventory and look at the tray to place", 12, height - 16, LABEL);
         }
 
         private void renderShowcasePage(GuiGraphics graphics, Showcase showcase) {
@@ -441,6 +514,55 @@ public final class ProceduralBouquetsVisualHarness {
             } else if (!entries.isEmpty()) {
                 pose.translate(0.5F, 0.0F, 0.5F);
                 BouquetRenderUtil.renderPottedBouquet(entries, pose, buffers, LightTexture.FULL_BRIGHT, 0, null, 1234L, BouquetData.MAX_ENTRIES);
+            }
+            graphics.flush();
+            pose.popPose();
+        }
+
+        private void renderPlacementScene(
+            GuiGraphics graphics,
+            float x,
+            float y,
+            float scale,
+            List<BouquetEntry> entries,
+            BouquetPlacement.State state
+        ) {
+            PoseStack pose = graphics.pose();
+            MultiBufferSource.BufferSource buffers = graphics.bufferSource();
+            pose.pushPose();
+            pose.translate(x, y, 200.0F);
+            pose.scale(scale, -scale, scale);
+            pose.mulPose(Axis.XP.rotationDegrees(65.0F));
+            pose.mulPose(Axis.YP.rotationDegrees(35.0F));
+            pose.translate(-0.5F, -0.3F, -0.5F);
+            minecraft.getBlockRenderer().renderSingleBlock(
+                ModBlocks.BOUQUET_GRID.get().defaultBlockState(),
+                pose,
+                buffers,
+                LightTexture.FULL_BRIGHT,
+                0
+            );
+            BouquetRenderUtil.renderGridBouquet(
+                entries,
+                pose,
+                buffers,
+                LightTexture.FULL_BRIGHT,
+                0,
+                null,
+                1234L,
+                BouquetData.MAX_ENTRIES
+            );
+            if (state != null) {
+                BouquetPlacementGhostRenderer.render(
+                    PLACEMENT_GHOST,
+                    state,
+                    pose,
+                    buffers,
+                    LightTexture.FULL_BRIGHT,
+                    0,
+                    null,
+                    1234
+                );
             }
             graphics.flush();
             pose.popPose();

@@ -13,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -89,10 +88,18 @@ public class BouquetGridBlock extends BaseEntityBlock {
         int x = gridCoord(hit.getLocation().x - pos.getX());
         int z = gridCoord(hit.getLocation().z - pos.getZ());
 
-        if (be.getAt(x, z).isPresent()) {
-            if (!(player.isShiftKeyDown() && ModCommonConfig.ALLOW_REPLACEMENT_WHEN_SNEAKING.get())) {
-                return InteractionResult.CONSUME;
-            }
+        boolean occupied = be.getAt(x, z).isPresent();
+        BouquetPlacement.State placementState = BouquetPlacement.state(
+            occupied,
+            be.isFull(),
+            player.isShiftKeyDown(),
+            ModCommonConfig.ALLOW_REPLACEMENT_WHEN_SNEAKING.get()
+        );
+        if (!placementState.placeable()) {
+            return InteractionResult.CONSUME;
+        }
+
+        if (placementState == BouquetPlacement.State.REPLACEMENT) {
             if (level.isClientSide) {
                 return InteractionResult.SUCCESS;
             }
@@ -108,11 +115,7 @@ public class BouquetGridBlock extends BaseEntityBlock {
         }
 
         ResourceLocation id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(held.getItem());
-        long seed = pos.asLong() ^ player.getUUID().getLeastSignificantBits() ^ level.getGameTime() ^ id.hashCode() ^ (x * 31L + z);
-        int rot = (int) Math.floorMod(seed, 4L);
-        float scale = 0.85F + (Math.floorMod(seed >>> 2, 21L) / 100.0F);
-
-        BouquetEntry entry = new BouquetEntry(id, x, z, rot, scale, 0);
+        BouquetEntry entry = BouquetPlacement.entry(pos, player.getUUID(), id, x, z);
         if (!be.addEntry(entry)) {
             return InteractionResult.CONSUME;
         }
@@ -128,7 +131,7 @@ public class BouquetGridBlock extends BaseEntityBlock {
     }
 
     private static int gridCoord(double local) {
-        return Mth.clamp((int) Math.floor(local * 16.0D), 0, 15);
+        return BouquetPlacement.gridCoordinate(local);
     }
 
     public static boolean isValidFlower(ItemStack stack) {

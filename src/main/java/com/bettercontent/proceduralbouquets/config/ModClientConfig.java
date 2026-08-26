@@ -9,7 +9,7 @@ public final class ModClientConfig {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
     public static final ForgeConfigSpec.BooleanValue RENDER_HOVER_INDICATOR = BUILDER
-        .comment("Render a hovered bouquet grid cell outline")
+        .comment("Render the bouquet grid placement ghost and hovered cell outline")
         .define("renderHoverIndicator", true);
 
     public static final ForgeConfigSpec.IntValue MAX_RENDERED_FLOWERS = BUILDER

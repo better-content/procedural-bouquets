@@ -33,36 +33,82 @@ public final class BouquetRenderUtil {
 
         for (int i = 0; i < max; i++) {
             BouquetEntry entry = entries.get(i);
-            ItemStack stack = stackForEntry(entry);
-            if (stack.isEmpty()) {
-                continue;
-            }
-
-            float xCenter = (entry.x() + 0.5F) / 16.0F;
-            float zCenter = (entry.z() + 0.5F) / 16.0F;
-            float scale = gridFlowerScale(max) * entry.scale();
-
-            poseStack.pushPose();
-            poseStack.translate(
-                xCenter,
-                GRID_FLOWER_HEIGHT + (scale * 0.5F) + (entry.yOffset() * 0.006F),
-                zCenter
-            );
-            poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotationDegrees()));
-            poseStack.scale(scale, scale, scale);
-
-            itemRenderer.renderStatic(
-                stack,
-                ItemDisplayContext.FIXED,
-                packedLight,
-                packedOverlay,
+            renderGridFlower(
+                entry,
                 poseStack,
                 buffer,
+                packedLight,
+                packedOverlay,
                 level,
-                (int) (seedBase + (i * 31L))
+                (int) (seedBase + (i * 31L)),
+                0.0F,
+                itemRenderer
             );
-            poseStack.popPose();
         }
+    }
+
+    public static void renderGridFlower(
+        BouquetEntry entry,
+        PoseStack poseStack,
+        MultiBufferSource buffer,
+        int packedLight,
+        int packedOverlay,
+        Level level,
+        int seed,
+        float verticalOffset
+    ) {
+        renderGridFlower(
+            entry,
+            poseStack,
+            buffer,
+            packedLight,
+            packedOverlay,
+            level,
+            seed,
+            verticalOffset,
+            Minecraft.getInstance().getItemRenderer()
+        );
+    }
+
+    private static void renderGridFlower(
+        BouquetEntry entry,
+        PoseStack poseStack,
+        MultiBufferSource buffer,
+        int packedLight,
+        int packedOverlay,
+        Level level,
+        int seed,
+        float verticalOffset,
+        ItemRenderer itemRenderer
+    ) {
+        ItemStack stack = stackForEntry(entry);
+        if (stack.isEmpty()) {
+            return;
+        }
+
+        float xCenter = (entry.x() + 0.5F) / 16.0F;
+        float zCenter = (entry.z() + 0.5F) / 16.0F;
+        float scale = gridFlowerScale(1) * entry.scale();
+
+        poseStack.pushPose();
+        poseStack.translate(
+            xCenter,
+            GRID_FLOWER_HEIGHT + (scale * 0.5F) + (entry.yOffset() * 0.006F) + verticalOffset,
+            zCenter
+        );
+        poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotationDegrees()));
+        poseStack.scale(scale, scale, scale);
+        itemRenderer.renderStatic(
+            stack,
+            ItemDisplayContext.FIXED,
+            packedLight,
+            packedOverlay,
+            poseStack,
+            buffer,
+            level,
+            seed
+        );
+        poseStack.popPose();
     }
 
     public static void renderGatheredBouquet(
