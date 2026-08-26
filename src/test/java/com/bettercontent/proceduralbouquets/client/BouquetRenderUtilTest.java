@@ -22,4 +22,38 @@ class BouquetRenderUtilTest {
         org.junit.jupiter.api.Assertions.assertTrue(sparse > mixed);
         org.junit.jupiter.api.Assertions.assertTrue(mixed > dense);
     }
+
+    @Test
+    void pottedLayoutUsesTheSameFullSpreadAcrossWidthAndDepth() {
+        assertEquals(0.21F, BouquetRenderUtil.pottedHorizontalOffset(1.0F));
+        assertEquals(-0.21F, BouquetRenderUtil.pottedHorizontalOffset(-1.0F));
+        assertEquals(
+            0.42F,
+            BouquetRenderUtil.pottedHorizontalOffset(1.0F) - BouquetRenderUtil.pottedHorizontalOffset(-1.0F)
+        );
+    }
+
+    @Test
+    void pottedLayoutBuildsATallCenterAndSeatsOuterFlowersInThePot() {
+        float center = BouquetRenderUtil.pottedVerticalCenter(0.0F, 0.0F, 0);
+        float outer = BouquetRenderUtil.pottedVerticalCenter(1.0F, 0.0F, 0);
+
+        org.junit.jupiter.api.Assertions.assertTrue(center > outer);
+        assertEquals(0.62F, center);
+        assertEquals(0.50F, outer);
+        assertEquals(0.58F, BouquetRenderUtil.pottedFlowerScale(1));
+        assertEquals(0.38F, BouquetRenderUtil.pottedFlowerScale(64));
+    }
+
+    @Test
+    void gatheredWrapperGrowsWithTheFlowerCount() {
+        float sparse = BouquetRenderUtil.gatheredWrapperScale(1);
+        float mixed = BouquetRenderUtil.gatheredWrapperScale(12);
+        float dense = BouquetRenderUtil.gatheredWrapperScale(64);
+
+        assertEquals(0.54F, sparse);
+        assertEquals(0.72F, dense);
+        org.junit.jupiter.api.Assertions.assertTrue(sparse < mixed);
+        org.junit.jupiter.api.Assertions.assertTrue(mixed < dense);
+    }
 }

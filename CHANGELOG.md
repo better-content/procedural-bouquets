@@ -17,3 +17,4 @@
 - Improve sparse-to-dense readability with adaptive flower sizing, wider and deeper layouts, stronger gathered tiers, and lifted potted stems while preserving exact rotations.
 - Add server-authoritative per-flower rotation controls to the literal grid inventory: hover a flower and press `R` or `Shift+R` for clockwise or counterclockwise quarter-turns.
 - Rotate each occupied editor-slot icon to match that flower's stored quarter-turn, providing immediate orientation feedback without adding a preview.
+- Replace the oversized offset white wrapper with a compact centered kraft-paper sleeve, and expand potted bouquets into a larger radial crown that fills the pot in width, depth, and height.

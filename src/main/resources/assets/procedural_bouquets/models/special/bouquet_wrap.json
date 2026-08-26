@@ -1,15 +1,15 @@
 {
   "ambientocclusion": false,
   "textures": {
-    "particle": "minecraft:block/white_wool",
-    "paper": "minecraft:block/white_wool",
-    "band": "minecraft:block/brown_wool"
+    "particle": "minecraft:block/packed_mud",
+    "paper": "minecraft:block/packed_mud",
+    "fold": "minecraft:block/brown_terracotta",
+    "band": "minecraft:block/brown_concrete"
   },
   "elements": [
     {
-      "from": [4, 1, 7.25],
-      "to": [8.25, 10, 8.75],
-      "rotation": { "origin": [8, 4, 8], "axis": "z", "angle": 22.5 },
+      "from": [6.5, 1, 6.9],
+      "to": [9.5, 4.5, 9.1],
       "faces": {
         "north": { "texture": "#paper" },
         "south": { "texture": "#paper" },
@@ -20,9 +20,21 @@
       }
     },
     {
-      "from": [7.75, 1, 7.25],
-      "to": [12, 10, 8.75],
-      "rotation": { "origin": [8, 4, 8], "axis": "z", "angle": -22.5 },
+      "from": [5.5, 3.5, 6.6],
+      "to": [10.5, 7.25, 9.4],
+      "faces": {
+        "north": { "texture": "#fold" },
+        "south": { "texture": "#paper" },
+        "west": { "texture": "#fold" },
+        "east": { "texture": "#paper" },
+        "up": { "texture": "#paper" },
+        "down": { "texture": "#fold" }
+      }
+    },
+    {
+      "from": [4.25, 4.75, 6.9],
+      "to": [8.4, 9, 8.3],
+      "rotation": { "origin": [8, 5, 8], "axis": "z", "angle": 22.5 },
       "faces": {
         "north": { "texture": "#paper" },
         "south": { "texture": "#paper" },
@@ -33,8 +45,21 @@
       }
     },
     {
-      "from": [6.25, 3.25, 6.75],
-      "to": [9.75, 4.5, 9.25],
+      "from": [7.6, 4.75, 7.7],
+      "to": [11.75, 9, 9.1],
+      "rotation": { "origin": [8, 5, 8], "axis": "z", "angle": -22.5 },
+      "faces": {
+        "north": { "texture": "#fold" },
+        "south": { "texture": "#paper" },
+        "west": { "texture": "#fold" },
+        "east": { "texture": "#paper" },
+        "up": { "texture": "#paper" },
+        "down": { "texture": "#fold" }
+      }
+    },
+    {
+      "from": [5.25, 3.75, 6.25],
+      "to": [10.75, 5, 9.75],
       "faces": {
         "north": { "texture": "#band" },
         "south": { "texture": "#band" },

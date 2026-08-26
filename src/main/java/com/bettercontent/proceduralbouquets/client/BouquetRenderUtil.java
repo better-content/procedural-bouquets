@@ -131,12 +131,15 @@ public final class BouquetRenderUtil {
 
             float nx = (entry.x() - 7.5F) / 7.5F;
             float nz = (entry.z() - 7.5F) / 7.5F;
+            float scale = pottedFlowerScale(max) * entry.scale();
 
             poseStack.pushPose();
-            poseStack.translate(nx * 0.16F, 0.54F + (nz * 0.11F) + (entry.yOffset() * 0.005F), nz * 0.14F);
+            poseStack.translate(
+                pottedHorizontalOffset(nx),
+                pottedVerticalCenter(nx, nz, entry.yOffset()),
+                pottedHorizontalOffset(nz)
+            );
             poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotationDegrees()));
-
-            float scale = densityScale(max, 0.40F, 0.28F) * entry.scale();
             poseStack.scale(scale, scale, scale);
 
             itemRenderer.renderStatic(
@@ -151,6 +154,23 @@ public final class BouquetRenderUtil {
             );
             poseStack.popPose();
         }
+    }
+
+    static float pottedHorizontalOffset(float normalizedCoordinate) {
+        return normalizedCoordinate * 0.21F;
+    }
+
+    static float pottedVerticalCenter(float normalizedX, float normalizedZ, int yOffset) {
+        float radius = Math.min(1.0F, (float) Math.sqrt((normalizedX * normalizedX) + (normalizedZ * normalizedZ)));
+        return 0.50F + ((1.0F - radius) * 0.12F) + (normalizedZ * 0.025F) + (yOffset * 0.006F);
+    }
+
+    static float pottedFlowerScale(int count) {
+        return densityScale(count, 0.58F, 0.38F);
+    }
+
+    static float gatheredWrapperScale(int count) {
+        return densityScale(count, 0.54F, 0.72F);
     }
 
     public static ItemStack stackForEntry(BouquetEntry entry) {

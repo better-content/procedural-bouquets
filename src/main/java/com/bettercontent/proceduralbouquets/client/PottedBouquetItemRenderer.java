@@ -48,7 +48,6 @@ public final class PottedBouquetItemRenderer extends BlockEntityWithoutLevelRend
             0
         );
         if (!entries.isEmpty()) {
-            poseStack.translate(0.0F, 0.08F, 0.0F);
             BouquetRenderUtil.renderPottedBouquet(
                 entries,
                 poseStack,
