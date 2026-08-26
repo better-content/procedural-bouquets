@@ -18,3 +18,4 @@
 - Add server-authoritative per-flower rotation controls to the literal grid inventory: hover a flower and press `R` or `Shift+R` for clockwise or counterclockwise quarter-turns.
 - Rotate each occupied editor-slot icon to match that flower's stored quarter-turn, providing immediate orientation feedback without adding a preview.
 - Replace the oversized wrapper with exposed stems and a small centered cream ribbon tie, and expand potted bouquets into a larger radial crown that fills the pot in width, depth, and height.
+- Converge every gathered stem inside the ribbon and give only the outer flowers a subtle seven-degree outward lean, without changing their stored yaw.

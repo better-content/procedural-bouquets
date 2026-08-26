@@ -56,4 +56,25 @@ class BouquetRenderUtilTest {
         org.junit.jupiter.api.Assertions.assertTrue(sparse < mixed);
         org.junit.jupiter.api.Assertions.assertTrue(mixed < dense);
     }
+
+    @Test
+    void gatheredStemCentersStayInsideTheNarrowestTie() {
+        float left = BouquetRenderUtil.gatheredStemHorizontalOffset(-1.0F);
+        float right = BouquetRenderUtil.gatheredStemHorizontalOffset(1.0F);
+        float narrowestTieHalfWidth = BouquetRenderUtil.gatheredTieScale(1) * (2.5F / 16.0F);
+
+        assertEquals(-0.055F, left);
+        assertEquals(0.055F, right);
+        org.junit.jupiter.api.Assertions.assertTrue(Math.abs(left) < narrowestTieHalfWidth);
+        org.junit.jupiter.api.Assertions.assertTrue(Math.abs(right) < narrowestTieHalfWidth);
+    }
+
+    @Test
+    void onlyOuterGatheredFlowersLeanAwayFromTheCenter() {
+        assertEquals(0.0F, BouquetRenderUtil.gatheredOutwardTiltDegrees(-0.55F));
+        assertEquals(0.0F, BouquetRenderUtil.gatheredOutwardTiltDegrees(0.0F));
+        assertEquals(0.0F, BouquetRenderUtil.gatheredOutwardTiltDegrees(0.55F));
+        assertEquals(7.0F, BouquetRenderUtil.gatheredOutwardTiltDegrees(-1.0F));
+        assertEquals(-7.0F, BouquetRenderUtil.gatheredOutwardTiltDegrees(1.0F));
+    }
 }

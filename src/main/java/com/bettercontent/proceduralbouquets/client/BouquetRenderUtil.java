@@ -89,7 +89,8 @@ public final class BouquetRenderUtil {
             float nz = (entry.z() - 7.5F) / 7.5F;
 
             poseStack.pushPose();
-            poseStack.translate(nx * 0.25F, 0.28F + (nz * 0.17F) + (entry.yOffset() * 0.006F), nz * 0.10F);
+            poseStack.translate(gatheredStemHorizontalOffset(nx), 0.28F + (nz * 0.17F) + (entry.yOffset() * 0.006F), nz * 0.10F);
+            poseStack.mulPose(Axis.ZP.rotationDegrees(gatheredOutwardTiltDegrees(nx)));
             poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotationDegrees()));
 
             float scale = densityScale(max, 0.48F, 0.30F) * entry.scale();
@@ -171,6 +172,18 @@ public final class BouquetRenderUtil {
 
     static float gatheredTieScale(int count) {
         return densityScale(count, 0.48F, 0.68F);
+    }
+
+    static float gatheredStemHorizontalOffset(float normalizedX) {
+        return normalizedX * 0.055F;
+    }
+
+    static float gatheredOutwardTiltDegrees(float normalizedX) {
+        float edgeAmount = Math.max(0.0F, (Math.abs(normalizedX) - 0.55F) / 0.45F);
+        if (edgeAmount == 0.0F) {
+            return 0.0F;
+        }
+        return -Math.signum(normalizedX) * Math.min(edgeAmount, 1.0F) * 7.0F;
     }
 
     public static ItemStack stackForEntry(BouquetEntry entry) {
