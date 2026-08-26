@@ -10,6 +10,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -23,6 +24,8 @@ public final class BouquetGridMenu extends AbstractContainerMenu {
     public static final int GRID_TOP = 18;
     public static final int PLAYER_INVENTORY_TOP = 324;
     public static final int PLAYER_HOTBAR_TOP = 382;
+    public static final int ROTATE_CLOCKWISE_BUTTON = 0;
+    public static final int ROTATE_COUNTERCLOCKWISE_BUTTON = 1;
 
     private final Container grid;
 
@@ -82,6 +85,25 @@ public final class BouquetGridMenu extends AbstractContainerMenu {
         if (slot < 0 || slot >= GRID_SLOT_COUNT) {
             throw new IndexOutOfBoundsException("Bouquet grid slot outside 0..255: " + slot);
         }
+    }
+
+    @Override
+    public void clicked(int slotId, int button, ClickType clickType, Player player) {
+        if (isRotationClick(slotId, button, clickType)) {
+            if (!player.level().isClientSide && grid instanceof BouquetGridBlockEntity bouquetGrid) {
+                int quarterTurns = button == ROTATE_COUNTERCLOCKWISE_BUTTON ? -1 : 1;
+                bouquetGrid.rotateAt(xForSlot(slotId), zForSlot(slotId), quarterTurns);
+            }
+            return;
+        }
+        super.clicked(slotId, button, clickType, player);
+    }
+
+    private static boolean isRotationClick(int slotId, int button, ClickType clickType) {
+        return slotId >= 0
+            && slotId < GRID_SLOT_COUNT
+            && (button == ROTATE_CLOCKWISE_BUTTON || button == ROTATE_COUNTERCLOCKWISE_BUTTON)
+            && clickType == ClickType.CLONE;
     }
 
     @Override

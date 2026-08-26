@@ -15,3 +15,4 @@
 - Stand every tray flower upright as a three-dimensional block-item model so the editor matches the collected bouquet's silhouette.
 - Preserve each flower's exact quarter-turn orientation across tray, gathered, and potted renders without form-specific rotation offsets.
 - Improve sparse-to-dense readability with adaptive flower sizing, wider and deeper layouts, stronger gathered tiers, and lifted potted stems while preserving exact rotations.
+- Add server-authoritative per-flower rotation controls to the literal grid inventory: hover a flower and press `R` or `Shift+R` for clockwise or counterclockwise quarter-turns.

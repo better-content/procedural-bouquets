@@ -24,4 +24,8 @@ public record BouquetEntry(
     public float rotationDegrees() {
         return rotation * 90.0F;
     }
+
+    public BouquetEntry rotatedByQuarterTurns(int quarterTurns) {
+        return new BouquetEntry(itemId, x, z, rotation + quarterTurns, scale, yOffset);
+    }
 }

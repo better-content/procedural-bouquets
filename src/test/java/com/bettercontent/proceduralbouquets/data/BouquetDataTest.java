@@ -35,6 +35,15 @@ class BouquetDataTest {
     }
 
     @Test
+    void bouquetEntryRotationPreservesEveryOtherPropertyAndWraps() {
+        BouquetEntry entry = new BouquetEntry(id("minecraft:cornflower"), 4, 11, 0, 0.9F, -2);
+
+        assertEquals(new BouquetEntry(entry.itemId(), 4, 11, 1, 0.9F, -2), entry.rotatedByQuarterTurns(1));
+        assertEquals(new BouquetEntry(entry.itemId(), 4, 11, 3, 0.9F, -2), entry.rotatedByQuarterTurns(-1));
+        assertEquals(entry, entry.rotatedByQuarterTurns(4));
+    }
+
+    @Test
     void toTagAppliesClampRules() {
         List<BouquetEntry> entries = List.of(
             new BouquetEntry(id("minecraft:poppy"), -2, 40, 19, 5.0F, 0)

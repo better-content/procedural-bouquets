@@ -5,6 +5,7 @@
   "block.procedural_bouquets.potted_bouquet": "Potted Bouquet",
   "item.procedural_bouquets.potted_bouquet": "Potted Bouquet",
   "screen.procedural_bouquets.bouquet_grid": "Bouquet Grid",
+  "screen.procedural_bouquets.rotate_hint": "R rotate / Shift+R reverse",
   "tooltip.procedural_bouquets.flower_count": "Flowers: %s",
   "tooltip.procedural_bouquets.more": "+%s more"
 }

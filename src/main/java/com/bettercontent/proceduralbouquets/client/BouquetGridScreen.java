@@ -6,6 +6,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import org.lwjgl.glfw.GLFW;
 
 public final class BouquetGridScreen extends AbstractContainerScreen<BouquetGridMenu> {
     private static final int BACKGROUND = 0xFF2B2924;
@@ -14,6 +16,8 @@ public final class BouquetGridScreen extends AbstractContainerScreen<BouquetGrid
     private static final int SLOT_BACKGROUND = 0xFF24221D;
     private static final int SLOT_BACKGROUND_ALTERNATE = 0xFF201E1A;
     private static final int LABEL = 0xFFEFE4BD;
+    private static final int HINT = 0xFFC8B984;
+    private static final Component ROTATION_HINT = Component.translatable("screen.procedural_bouquets.rotate_hint");
 
     private AdaptiveMenuLayout.Transform transform = new AdaptiveMenuLayout.Transform(1.0F, 0.0F, 0.0F);
 
@@ -89,7 +93,37 @@ public final class BouquetGridScreen extends AbstractContainerScreen<BouquetGrid
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         graphics.drawString(font, title, titleLabelX, titleLabelY, LABEL, false);
+        graphics.drawString(font, ROTATION_HINT, imageWidth - 8 - font.width(ROTATION_HINT), titleLabelY, HINT, false);
         graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, LABEL, false);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_R && rotateHoveredFlower(hasShiftDown())) {
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    private boolean rotateHoveredFlower(boolean counterClockwise) {
+        if (hoveredSlot == null || !hoveredSlot.hasItem() || minecraft == null || minecraft.gameMode == null || minecraft.player == null) {
+            return false;
+        }
+        for (int slotId = 0; slotId < BouquetGridMenu.GRID_SLOT_COUNT; slotId++) {
+            if (menu.getSlot(slotId) == hoveredSlot) {
+                minecraft.gameMode.handleInventoryMouseClick(
+                    menu.containerId,
+                    slotId,
+                    counterClockwise
+                        ? BouquetGridMenu.ROTATE_COUNTERCLOCKWISE_BUTTON
+                        : BouquetGridMenu.ROTATE_CLOCKWISE_BUTTON,
+                    ClickType.CLONE,
+                    minecraft.player
+                );
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -63,6 +63,18 @@ public class BouquetGridBlockEntity extends BlockEntity implements Container, Me
         return entries.stream().filter(entry -> entry.x() == x && entry.z() == z).findFirst();
     }
 
+    public boolean rotateAt(int x, int z, int quarterTurns) {
+        for (int i = 0; i < entries.size(); i++) {
+            BouquetEntry entry = entries.get(i);
+            if (entry.x() == x && entry.z() == z) {
+                entries.set(i, entry.rotatedByQuarterTurns(quarterTurns));
+                markUpdated();
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isFull() {
         return entries.size() >= Math.min(BouquetData.MAX_ENTRIES, ModCommonConfig.MAX_FLOWERS_PER_BOUQUET.get());
     }

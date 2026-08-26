@@ -218,6 +218,18 @@ public final class ProceduralBouquetsGameTests {
         helper.assertTrue(grid.getAt(5, 7).isPresent(), "cursor placement should populate the exact destination cell");
         helper.assertTrue(menu.getCarried().isEmpty(), "completed cursor movement should leave no carried flower");
 
+        BouquetEntry arranged = grid.getAt(5, 7).orElseThrow();
+        menu.clicked(destination, BouquetGridMenu.ROTATE_CLOCKWISE_BUTTON, ClickType.CLONE, player);
+        helper.assertTrue(
+            grid.getAt(5, 7).orElseThrow().equals(arranged.rotatedByQuarterTurns(1)),
+            "clockwise rotation should change only the selected flower's quarter-turn"
+        );
+        menu.clicked(destination, BouquetGridMenu.ROTATE_COUNTERCLOCKWISE_BUTTON, ClickType.CLONE, player);
+        helper.assertTrue(
+            grid.getAt(5, 7).orElseThrow().equals(arranged),
+            "counterclockwise rotation should restore the selected flower without changing its arrangement data"
+        );
+
         helper.assertTrue(menu.stillValid(player), "menu should remain valid beside its grid");
         helper.setBlock(pos, Blocks.AIR);
         helper.assertTrue(!menu.stillValid(player), "menu should become invalid when its grid is removed");
