@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 
 public final class PottedBouquetItemRenderer extends BlockEntityWithoutLevelRenderer {
     private static PottedBouquetItemRenderer instance;
@@ -36,18 +36,17 @@ public final class PottedBouquetItemRenderer extends BlockEntityWithoutLevelRend
         Minecraft minecraft = Minecraft.getInstance();
 
         poseStack.pushPose();
-        poseStack.translate(0.5F, 0.0F, 0.5F);
-        minecraft.getItemRenderer().renderStatic(
-            new ItemStack(Items.FLOWER_POT),
-            ItemDisplayContext.FIXED,
-            packedLight,
-            packedOverlay,
+        minecraft.getBlockRenderer().renderSingleBlock(
+            Blocks.FLOWER_POT.defaultBlockState(),
             poseStack,
             buffer,
-            null,
-            0
+            packedLight,
+            packedOverlay
         );
         if (!entries.isEmpty()) {
+            poseStack.translate(0.5F, 0.0F, 0.5F);
+            float flowerLayerScale = BouquetRenderUtil.pottedItemFlowerLayerScale();
+            poseStack.scale(flowerLayerScale, flowerLayerScale, flowerLayerScale);
             BouquetRenderUtil.renderPottedBouquet(
                 entries,
                 poseStack,

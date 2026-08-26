@@ -174,6 +174,10 @@ public final class BouquetRenderUtil {
         return densityScale(count, 0.58F, 0.38F);
     }
 
+    static float pottedItemFlowerLayerScale() {
+        return 1.25F;
+    }
+
     static float gatheredTieScale(int count) {
         return densityScale(count, 0.48F, 0.68F);
     }

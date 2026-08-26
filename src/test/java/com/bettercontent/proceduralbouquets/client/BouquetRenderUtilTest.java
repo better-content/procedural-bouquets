@@ -53,6 +53,12 @@ class BouquetRenderUtilTest {
     }
 
     @Test
+    void pottedItemFlowerLayerIsLargerThanThePlacedBlockLayer() {
+        org.junit.jupiter.api.Assertions.assertTrue(BouquetRenderUtil.pottedItemFlowerLayerScale() > 1.0F);
+        assertEquals(1.25F, BouquetRenderUtil.pottedItemFlowerLayerScale());
+    }
+
+    @Test
     void gatheredTieGrowsWithTheFlowerCountWithoutBecomingAWrapper() {
         float sparse = BouquetRenderUtil.gatheredTieScale(1);
         float mixed = BouquetRenderUtil.gatheredTieScale(12);
