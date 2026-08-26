@@ -219,10 +219,18 @@ public final class ProceduralBouquetsGameTests {
         helper.assertTrue(menu.getCarried().isEmpty(), "completed cursor movement should leave no carried flower");
 
         BouquetEntry arranged = grid.getAt(5, 7).orElseThrow();
+        helper.assertTrue(
+            menu.rotationForSlot(destination) == arranged.rotation(),
+            "menu should expose the selected flower's stored rotation to its slot renderer"
+        );
         menu.clicked(destination, BouquetGridMenu.ROTATE_CLOCKWISE_BUTTON, ClickType.CLONE, player);
         helper.assertTrue(
             grid.getAt(5, 7).orElseThrow().equals(arranged.rotatedByQuarterTurns(1)),
             "clockwise rotation should change only the selected flower's quarter-turn"
+        );
+        helper.assertTrue(
+            menu.rotationForSlot(destination) == arranged.rotatedByQuarterTurns(1).rotation(),
+            "slot renderer rotation should update with the server-authoritative flower rotation"
         );
         menu.clicked(destination, BouquetGridMenu.ROTATE_COUNTERCLOCKWISE_BUTTON, ClickType.CLONE, player);
         helper.assertTrue(

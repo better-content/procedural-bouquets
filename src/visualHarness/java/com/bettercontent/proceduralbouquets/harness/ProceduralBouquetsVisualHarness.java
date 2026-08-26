@@ -3,6 +3,7 @@ package com.bettercontent.proceduralbouquets.harness;
 import com.bettercontent.proceduralbouquets.ProceduralBouquets;
 import com.bettercontent.proceduralbouquets.client.BouquetRenderUtil;
 import com.bettercontent.proceduralbouquets.client.BouquetGridScreen;
+import com.bettercontent.proceduralbouquets.blockentity.BouquetGridBlockEntity;
 import com.bettercontent.proceduralbouquets.data.BouquetData;
 import com.bettercontent.proceduralbouquets.data.BouquetEntry;
 import com.bettercontent.proceduralbouquets.item.PottedBouquetItem;
@@ -26,11 +27,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -269,9 +270,12 @@ public final class ProceduralBouquetsVisualHarness {
             inventory.setItem(0, new ItemStack(Items.POPPY, 16));
             inventory.setItem(1, new ItemStack(Items.CORNFLOWER, 8));
             inventory.setItem(9, new ItemStack(Items.DANDELION, 12));
-            SimpleContainer grid = new SimpleContainer(BouquetGridMenu.GRID_SLOT_COUNT);
+            BouquetGridBlockEntity grid = new BouquetGridBlockEntity(
+                BlockPos.ZERO,
+                ModBlocks.BOUQUET_GRID.get().defaultBlockState()
+            );
             for (BouquetEntry entry : DENSE) {
-                grid.setItem(BouquetGridMenu.slotIndex(entry.x(), entry.z()), BouquetRenderUtil.stackForEntry(entry));
+                grid.addEntry(entry);
             }
             editorScreen = new BouquetGridScreen(
                 new BouquetGridMenu(77, inventory, grid),

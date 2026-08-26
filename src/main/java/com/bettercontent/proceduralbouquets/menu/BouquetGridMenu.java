@@ -81,6 +81,16 @@ public final class BouquetGridMenu extends AbstractContainerMenu {
         return slot / GRID_COLUMNS;
     }
 
+    public int rotationForSlot(int slot) {
+        checkGridSlot(slot);
+        if (grid instanceof BouquetGridBlockEntity bouquetGrid) {
+            return bouquetGrid.getAt(xForSlot(slot), zForSlot(slot))
+                .map(entry -> entry.rotation())
+                .orElse(0);
+        }
+        return 0;
+    }
+
     private static void checkGridSlot(int slot) {
         if (slot < 0 || slot >= GRID_SLOT_COUNT) {
             throw new IndexOutOfBoundsException("Bouquet grid slot outside 0..255: " + slot);

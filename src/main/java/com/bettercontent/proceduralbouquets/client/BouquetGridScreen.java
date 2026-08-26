@@ -2,11 +2,13 @@ package com.bettercontent.proceduralbouquets.client;
 
 import com.bettercontent.proceduralbouquets.menu.BouquetGridMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
 
 public final class BouquetGridScreen extends AbstractContainerScreen<BouquetGridMenu> {
@@ -95,6 +97,42 @@ public final class BouquetGridScreen extends AbstractContainerScreen<BouquetGrid
         graphics.drawString(font, title, titleLabelX, titleLabelY, LABEL, false);
         graphics.drawString(font, ROTATION_HINT, imageWidth - 8 - font.width(ROTATION_HINT), titleLabelY, HINT, false);
         graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, LABEL, false);
+        renderRotatedGridIcons(graphics);
+    }
+
+    private void renderRotatedGridIcons(GuiGraphics graphics) {
+        PoseStack pose = graphics.pose();
+        pose.pushPose();
+        pose.translate(0.0F, 0.0F, 200.0F);
+        for (int gridSlot = 0; gridSlot < BouquetGridMenu.GRID_SLOT_COUNT; gridSlot++) {
+            int quarterTurns = menu.rotationForSlot(gridSlot);
+            Slot slot = menu.getSlot(gridSlot);
+            if (quarterTurns == 0 || !slot.hasItem()) {
+                continue;
+            }
+
+            int x = BouquetGridMenu.xForSlot(gridSlot);
+            int z = BouquetGridMenu.zForSlot(gridSlot);
+            graphics.fill(
+                slot.x,
+                slot.y,
+                slot.x + 16,
+                slot.y + 16,
+                ((x + z) & 1) != 0 ? SLOT_BACKGROUND_ALTERNATE : SLOT_BACKGROUND
+            );
+
+            pose.pushPose();
+            pose.translate(slot.x + 8.0F, slot.y + 8.0F, 0.0F);
+            pose.mulPose(Axis.ZP.rotationDegrees(quarterTurns * 90.0F));
+            pose.translate(-(slot.x + 8.0F), -(slot.y + 8.0F), 0.0F);
+            graphics.renderItem(slot.getItem(), slot.x, slot.y, gridSlot);
+            pose.popPose();
+
+            if (slot == hoveredSlot) {
+                renderSlotHighlight(graphics, slot.x, slot.y, 300);
+            }
+        }
+        pose.popPose();
     }
 
     @Override
