@@ -40,13 +40,15 @@ public final class BouquetRenderUtil {
 
             float xCenter = (entry.x() + 0.5F) / 16.0F;
             float zCenter = (entry.z() + 0.5F) / 16.0F;
+            float scale = 0.30F * entry.scale();
 
             poseStack.pushPose();
-            poseStack.translate(xCenter, GRID_FLOWER_HEIGHT + (entry.yOffset() * 0.006F), zCenter);
+            poseStack.translate(
+                xCenter,
+                GRID_FLOWER_HEIGHT + (scale * 0.5F) + (entry.yOffset() * 0.006F),
+                zCenter
+            );
             poseStack.mulPose(Axis.YP.rotationDegrees(entry.rotation() * 90.0F));
-            poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-
-            float scale = 0.30F * entry.scale();
             poseStack.scale(scale, scale, scale);
 
             itemRenderer.renderStatic(
