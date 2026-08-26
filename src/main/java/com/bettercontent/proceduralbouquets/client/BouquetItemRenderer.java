@@ -56,7 +56,11 @@ public class BouquetItemRenderer extends BlockEntityWithoutLevelRenderer {
         float scale = BouquetRenderUtil.gatheredTieScale(flowerCount);
 
         poseStack.pushPose();
-        poseStack.translate(-(scale * 0.5F), -(scale * 0.25F), -(scale * 0.5F));
+        poseStack.translate(
+            -(scale * 0.5F),
+            BouquetRenderUtil.gatheredTieVerticalOffset() - (scale * 0.25F),
+            -(scale * 0.5F)
+        );
         poseStack.scale(scale, scale, scale);
         minecraft.getBlockRenderer().getModelRenderer().renderModel(
             poseStack.last(),

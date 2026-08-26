@@ -65,6 +65,11 @@ class BouquetRenderUtilTest {
     }
 
     @Test
+    void gatheredTieSitsAtTheLowerThirdOfTheStems() {
+        assertEquals(0.18F, BouquetRenderUtil.gatheredTieVerticalOffset());
+    }
+
+    @Test
     void gatheredStemCentersStayInsideTheNarrowestTie() {
         float left = BouquetRenderUtil.gatheredStemHorizontalOffset(-1.0F);
         float right = BouquetRenderUtil.gatheredStemHorizontalOffset(1.0F);

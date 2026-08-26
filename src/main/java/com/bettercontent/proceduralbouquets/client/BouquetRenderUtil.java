@@ -178,6 +178,10 @@ public final class BouquetRenderUtil {
         return densityScale(count, 0.48F, 0.68F);
     }
 
+    static float gatheredTieVerticalOffset() {
+        return 0.18F;
+    }
+
     static float gatheredStemHorizontalOffset(float normalizedX) {
         return normalizedX * 0.055F;
     }
