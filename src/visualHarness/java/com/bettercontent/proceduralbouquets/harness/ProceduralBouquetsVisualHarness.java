@@ -230,8 +230,9 @@ public final class ProceduralBouquetsVisualHarness {
                 x = mixedX[index];
                 z = mixedZ[index];
             } else {
-                x = 1 + ((index % 8) * 2);
-                z = 1 + (((index / 8) % 8) * 2);
+                int[] denseCoordinates = {1, 3, 5, 7, 8, 10, 12, 14};
+                x = denseCoordinates[index % 8];
+                z = denseCoordinates[(index / 8) % 8];
             }
             float scale = 0.84F + ((index * 7) % 25) / 100.0F;
             int y = (index % 5) - 2;

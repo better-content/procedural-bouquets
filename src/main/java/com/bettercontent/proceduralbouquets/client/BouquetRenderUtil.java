@@ -40,7 +40,7 @@ public final class BouquetRenderUtil {
 
             float xCenter = (entry.x() + 0.5F) / 16.0F;
             float zCenter = (entry.z() + 0.5F) / 16.0F;
-            float scale = densityScale(max, 0.30F, 0.20F) * entry.scale();
+            float scale = gridFlowerScale(max) * entry.scale();
 
             poseStack.pushPose();
             poseStack.translate(
@@ -159,6 +159,10 @@ public final class BouquetRenderUtil {
 
     static float pottedHorizontalOffset(float normalizedCoordinate) {
         return normalizedCoordinate * 0.21F;
+    }
+
+    static float gridFlowerScale(int count) {
+        return 0.40F;
     }
 
     static float pottedVerticalCenter(float normalizedX, float normalizedZ, int yOffset) {

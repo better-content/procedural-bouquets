@@ -24,6 +24,13 @@ class BouquetRenderUtilTest {
     }
 
     @Test
+    void trayFlowersRemainFullSizedAtEveryDensity() {
+        assertEquals(0.40F, BouquetRenderUtil.gridFlowerScale(1));
+        assertEquals(0.40F, BouquetRenderUtil.gridFlowerScale(12));
+        assertEquals(0.40F, BouquetRenderUtil.gridFlowerScale(64));
+    }
+
+    @Test
     void pottedLayoutUsesTheSameFullSpreadAcrossWidthAndDepth() {
         assertEquals(0.21F, BouquetRenderUtil.pottedHorizontalOffset(1.0F));
         assertEquals(-0.21F, BouquetRenderUtil.pottedHorizontalOffset(-1.0F));
