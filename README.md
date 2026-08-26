@@ -19,7 +19,7 @@ Pack-owned procedural flower bouquet generator for Forge `1.20.1`.
 ./gradlew stageRuntimeJar
 ```
 
-`verifyVisualHarness` launches an isolated 1600×900 client under the normal production renderers and captures five ignored evidence sheets in `run-visual-harness/screenshots/`. The sheets cover empty, single-flower, mixed 12-flower, and dense 64-flower forms across grid, bouquet item, potted item, and potted block views, plus the production 16×16 grid editor. A successful task proves the sheets were captured; release review should still inspect all five images for composition, clipping, missing textures, and context transforms.
+`verifyVisualHarness` launches an isolated 1600×900 client under the normal production renderers and captures nine ignored evidence sheets in `run-visual-harness/screenshots/`. The sheets cover empty, single-flower, mixed 12-flower, and dense 64-flower forms across grid, bouquet item, potted item, and potted block views, plus the production 16×16 grid editor and four full-size, hand-composed showcase arrangements. A successful task proves the sheets were captured; release review should still inspect all nine images for composition, clipping, missing textures, and context transforms.
 
 ## Release artifact
 

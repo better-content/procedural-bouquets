@@ -44,7 +44,11 @@ public final class ProceduralBouquetsVisualHarness {
         "02-bouquet-item.png",
         "03-potted-item.png",
         "04-potted-block.png",
-        "05-grid-editor.png"
+        "05-grid-editor.png",
+        "06-sunset-ember.png",
+        "07-moonlit-meadow.png",
+        "08-blush-garden.png",
+        "09-wildflower-crown.png"
     };
     private static final List<BouquetEntry> EMPTY = List.of();
     private static final List<BouquetEntry> SINGLE = entries(1);
@@ -52,6 +56,77 @@ public final class ProceduralBouquetsVisualHarness {
     private static final List<BouquetEntry> DENSE = entries(64);
     private static final List<List<BouquetEntry>> FIXTURES = List.of(EMPTY, SINGLE, MIXED, DENSE);
     private static final String[] FIXTURE_NAMES = {"Empty", "Single", "Mixed 12", "Dense 64"};
+    private static final List<Showcase> SHOWCASES = List.of(
+        new Showcase("Sunset Ember", arrangement(
+            flower("orange_tulip", 8, 13, 0, 1.08F, 2),
+            flower("orange_tulip", 7, 12, 2, 1.02F, 1),
+            flower("red_tulip", 5, 11, 1, 0.98F, 1),
+            flower("red_tulip", 10, 11, 3, 1.00F, 1),
+            flower("poppy", 3, 9, 0, 0.94F, 0),
+            flower("poppy", 12, 9, 2, 0.96F, 0),
+            flower("orange_tulip", 6, 8, 1, 1.04F, 0),
+            flower("orange_tulip", 9, 8, 3, 1.02F, 0),
+            flower("dandelion", 4, 6, 0, 0.90F, -1),
+            flower("dandelion", 11, 6, 2, 0.92F, -1),
+            flower("red_tulip", 7, 5, 1, 0.98F, -1),
+            flower("red_tulip", 8, 5, 3, 1.00F, -1),
+            flower("poppy", 6, 3, 0, 0.88F, -2),
+            flower("poppy", 9, 3, 2, 0.90F, -2)
+        )),
+        new Showcase("Moonlit Meadow", arrangement(
+            flower("allium", 7, 13, 0, 1.08F, 2),
+            flower("allium", 9, 12, 2, 1.04F, 2),
+            flower("blue_orchid", 5, 11, 1, 1.00F, 1),
+            flower("blue_orchid", 11, 10, 3, 0.98F, 1),
+            flower("oxeye_daisy", 8, 10, 0, 0.96F, 1),
+            flower("cornflower", 3, 9, 2, 0.94F, 0),
+            flower("cornflower", 12, 9, 0, 0.96F, 0),
+            flower("azure_bluet", 6, 8, 1, 0.94F, 0),
+            flower("azure_bluet", 9, 8, 3, 0.92F, 0),
+            flower("white_tulip", 4, 6, 0, 0.98F, -1),
+            flower("white_tulip", 11, 6, 2, 1.00F, -1),
+            flower("lily_of_the_valley", 7, 5, 1, 0.92F, -1),
+            flower("lily_of_the_valley", 8, 5, 3, 0.94F, -1),
+            flower("cornflower", 6, 3, 0, 0.88F, -2),
+            flower("cornflower", 10, 4, 2, 0.90F, -2)
+        )),
+        new Showcase("Blush Garden", arrangement(
+            flower("pink_tulip", 8, 13, 0, 1.08F, 2),
+            flower("allium", 6, 12, 1, 1.02F, 2),
+            flower("allium", 10, 12, 3, 1.00F, 1),
+            flower("white_tulip", 4, 10, 0, 0.98F, 1),
+            flower("white_tulip", 12, 10, 2, 0.98F, 1),
+            flower("pink_tulip", 6, 9, 1, 1.04F, 0),
+            flower("pink_tulip", 9, 9, 3, 1.02F, 0),
+            flower("oxeye_daisy", 3, 7, 0, 0.92F, 0),
+            flower("oxeye_daisy", 12, 7, 2, 0.94F, 0),
+            flower("red_tulip", 5, 6, 1, 0.96F, -1),
+            flower("red_tulip", 10, 6, 3, 0.98F, -1),
+            flower("pink_tulip", 7, 5, 0, 1.00F, -1),
+            flower("pink_tulip", 8, 5, 2, 1.00F, -1),
+            flower("azure_bluet", 6, 3, 1, 0.88F, -2),
+            flower("azure_bluet", 9, 3, 3, 0.90F, -2)
+        )),
+        new Showcase("Wildflower Crown", arrangement(
+            flower("allium", 7, 13, 0, 1.06F, 2),
+            flower("blue_orchid", 9, 13, 2, 1.04F, 2),
+            flower("pink_tulip", 5, 11, 1, 1.00F, 1),
+            flower("orange_tulip", 11, 11, 3, 1.00F, 1),
+            flower("cornflower", 3, 9, 0, 0.94F, 1),
+            flower("poppy", 13, 9, 2, 0.96F, 0),
+            flower("oxeye_daisy", 5, 8, 1, 0.96F, 0),
+            flower("dandelion", 10, 8, 3, 0.94F, 0),
+            flower("azure_bluet", 7, 9, 0, 0.92F, 0),
+            flower("lily_of_the_valley", 9, 9, 2, 0.92F, 0),
+            flower("red_tulip", 3, 6, 1, 0.94F, -1),
+            flower("white_tulip", 12, 6, 3, 0.96F, -1),
+            flower("orange_tulip", 5, 5, 0, 0.96F, -1),
+            flower("pink_tulip", 10, 5, 2, 0.98F, -1),
+            flower("blue_orchid", 7, 5, 1, 0.92F, -1),
+            flower("dandelion", 6, 3, 3, 0.88F, -2),
+            flower("poppy", 9, 3, 0, 0.90F, -2)
+        ))
+    );
 
     private static boolean opened;
     private static boolean capturePending;
@@ -164,6 +239,14 @@ public final class ProceduralBouquetsVisualHarness {
         return List.copyOf(entries);
     }
 
+    private static List<BouquetEntry> arrangement(BouquetEntry... entries) {
+        return List.of(entries);
+    }
+
+    private static BouquetEntry flower(String item, int x, int z, int rotation, float scale, int yOffset) {
+        return new BouquetEntry(ResourceLocation.parse("minecraft:" + item), x, z, rotation, scale, yOffset);
+    }
+
     private static ItemStack bouquet(List<BouquetEntry> entries) {
         ItemStack stack = new ItemStack(ModItems.BOUQUET.get());
         BouquetData.write(stack, entries);
@@ -208,8 +291,68 @@ public final class ProceduralBouquetsVisualHarness {
                 case 2 -> renderItemPage(graphics, true);
                 case 3 -> renderBlockPage(graphics, false);
                 case 4 -> editorScreen.render(graphics, -100, -100, partialTick);
+                case 5, 6, 7, 8 -> renderShowcasePage(graphics, SHOWCASES.get(page - 5));
                 default -> {
                 }
+            }
+        }
+
+        private void renderShowcasePage(GuiGraphics graphics, Showcase showcase) {
+            String[] columnNames = {"Arrangement · high angle", "Gathered bouquet", "Potted bouquet"};
+            String[] panelContexts = {"tray", "gathered", "potted"};
+            int gap = 8;
+            int panelWidth = (width - (gap * 4)) / 3;
+            int panelHeight = height - 64;
+            int firstTop = 52;
+
+            for (int column = 0; column < 3; column++) {
+                int left = gap + (column * (panelWidth + gap));
+                graphics.fill(left, firstTop, left + panelWidth, firstTop + panelHeight, PANEL);
+                graphics.drawCenteredString(
+                    font,
+                    showcase.name() + " · " + panelContexts[column] + " · " + showcase.entries().size(),
+                    left + (panelWidth / 2),
+                    firstTop + 10,
+                    LABEL
+                );
+                if (column == 0) {
+                    renderBlockScene(
+                        graphics,
+                        left + (panelWidth / 2),
+                        firstTop + (panelHeight / 2) + 38,
+                        panelHeight * 0.43F,
+                        showcase.entries(),
+                        true,
+                        65.0F,
+                        35.0F
+                    );
+                } else if (column == 1) {
+                    renderItemScene(
+                        graphics,
+                        left + (panelWidth / 2),
+                        firstTop + (panelHeight / 2) + 16,
+                        panelHeight * 0.42F,
+                        bouquet(showcase.entries()),
+                        ItemDisplayContext.GUI
+                    );
+                } else {
+                    renderBlockScene(
+                        graphics,
+                        left + (panelWidth / 2),
+                        firstTop + (panelHeight / 2) + 32,
+                        panelHeight * 0.43F,
+                        showcase.entries(),
+                        false,
+                        35.0F,
+                        35.0F
+                    );
+                }
+            }
+
+            graphics.drawCenteredString(font, title, width / 2, 8, LABEL);
+            for (int column = 0; column < columnNames.length; column++) {
+                int left = gap + (column * (panelWidth + gap));
+                graphics.drawCenteredString(font, columnNames[column], left + (panelWidth / 2), 30, LABEL);
             }
         }
 
@@ -317,5 +460,8 @@ public final class ProceduralBouquetsVisualHarness {
         public boolean isPauseScreen() {
             return false;
         }
+    }
+
+    private record Showcase(String name, List<BouquetEntry> entries) {
     }
 }
