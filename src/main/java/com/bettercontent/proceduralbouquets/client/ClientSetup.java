@@ -30,15 +30,6 @@ public final class ClientSetup {
         event.registerBlockEntityRenderer(ModBlockEntities.BOUQUET_GRID.get(), BouquetGridRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.POTTED_BOUQUET.get(), PottedBouquetRenderer::new);
 
-        if (Boolean.getBoolean("procedural_bouquets.visualHarness")) {
-            try {
-                Class.forName("com.bettercontent.proceduralbouquets.harness.ProceduralBouquetsVisualHarness")
-                    .getMethod("install")
-                    .invoke(null);
-            } catch (ReflectiveOperationException exception) {
-                throw new IllegalStateException("Unable to install Procedural Bouquets visual harness", exception);
-            }
-        }
     }
 
     @SubscribeEvent

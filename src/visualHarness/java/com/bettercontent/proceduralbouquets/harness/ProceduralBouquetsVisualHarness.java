@@ -36,12 +36,14 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.versions.forge.ForgeVersion;
 
+@Mod.EventBusSubscriber(modid = ProceduralBouquets.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class ProceduralBouquetsVisualHarness {
     private static final String[] CAPTURES = {
         "01-grid.png",
@@ -161,11 +163,6 @@ public final class ProceduralBouquetsVisualHarness {
     private static int finishTicks;
 
     private ProceduralBouquetsVisualHarness() {
-    }
-
-    public static void install() {
-        MinecraftForge.EVENT_BUS.register(ProceduralBouquetsVisualHarness.class);
-        System.out.println("PROCEDURAL_BOUQUETS_VISUAL_HARNESS installed");
     }
 
     @SubscribeEvent
